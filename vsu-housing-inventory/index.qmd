@@ -178,7 +178,7 @@ ggsave(
 knitr::include_graphics("plot/major_renovation.jpeg")
 ```
 
-### Housing materials
+### Housing materials {.unnumbered}
 
 - Walls: Concrete is the dominant material (about half of all wall renovations), followed by mixed half‑plywood‑half concrete. Lighter materials, plywood, and wood are used but in much smaller proportions.
 
@@ -280,5 +280,169 @@ ggsave(
   
 # display plot
 knitr::include_graphics("plot/house_material.jpeg")
+
+```
+
+
+# Occupancy details
+
+### Civil status {.unnumbered}
+
+```{r}
+## subtitle
+subtitle_text <- str_wrap("Most occupants are married (65%), followed by single (31%), while only a small share are widowed or separated.", 70)
+
+## plotting civilt status
+p_civil_stat <- 
+    housing_dta |> 
+    mutate(civil_status = if_else(str_detect(civil_status, "Single"), "Single", civil_status)) |> 
+    count(civil_status) |> 
+    mutate(pct = n / sum(n)) |> 
+    mutate(pct_lab = str_c(round(pct*100, 0), "% (n=", n, ")")) |> 
+    mutate(civil_status = fct_reorder(civil_status, pct)) |> 
+    ggplot(aes(pct, civil_status)) +
+    geom_col(width = 0.6) +
+    geom_text(aes(label = pct_lab), hjust = -0.2, fontface = "bold", size = 4) +
+    scale_x_continuous(labels = percent_format(), limits = c(0, 1)) +
+    labs(
+        title = glue("Civil status distribution of occupants (n = {nrow(housing_dta)})"),
+        subtitle = subtitle_text,
+        x = NULL,
+        y = NULL
+    ) +
+    custom_theme()
+
+## save plot
+ggsave(
+    plot = p_civil_stat,
+    filename = "plot/civil_stat.jpeg",
+    units = "in",
+    width = 8,
+    height = 5,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/civil_stat.jpeg")
+
+```
+
+
+### Expected retirement {.unnumbered}
+
+-  Several pronounced spikes occur, including the highest point in 2046 (five retirees). 
+
+- Other notable peaks are in 2050, 2052, 2054, 2055, and 2056, each with three to four retirees. This decade represents the most concentrated wave of retirements.
+
+- The data suggests a long stretch of low retirements followed by a concentrated cluster in the mid‑2040s to mid‑2050s. 
+
+```{r}
+
+## subtitle
+subtitle_text <- str_wrap("Expected retirements remain low and scattered in the early years, but several peaks appear between 2046 and 2056, with counts reaching up to five retirees in a single year.", 80)
+
+## retirement date data
+retirement_date_dta <- 
+    housing_dta |> 
+    select(retirement) |> 
+    mutate(date = ymd(retirement)) |> 
+    select(-retirement) |> 
+    mutate(year_month = floor_date(date, "year")) |> 
+    group_by(year_month) |> 
+    summarise(count = n(), .groups = "drop")
+
+
+# plot time series
+p_retirement <- 
+    ggplot(retirement_date_dta, aes(x = year_month, y = count)) +
+    geom_line(color = "steelblue", linewidth = 1) +
+    geom_point(color = "darkred", size = 2) +
+    geom_text(aes(label = count), vjust = -1.3, fontface = "bold", size = 4) +
+    scale_y_continuous(limits = c(0, 10), breaks = seq(0, 10, 2)) +
+    scale_x_date(
+        breaks = seq(as.Date("2024-01-01"), as.Date("2065-01-01"), by ="5 years"),
+        labels = date_format("%Y"),
+        limits = c(as.Date("2024-01-01"), as.Date("2065-01-01"))
+    ) +
+    labs(
+        title = glue("Projected number of expected retirees by year (n = {nrow(housing_dta)})"),
+        subtitle = subtitle_text,
+        x = NULL,
+        y = "No of retirees"
+    ) +
+    custom_theme()
+
+## save plot
+ggsave(
+    plot = p_retirement,
+    filename = "plot/retirement.jpeg",
+    units = "in",
+    width = 10,
+    height = 6,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/retirement.jpeg")
+```
+
+
+### Number of co-occupants {.unnumbered}
+
+
+### Number of vehicles owned {.unnumbered}
+
+
+### Number of pets owned {.unnumbered}
+
+
+# Conditions of facility
+
+### Overall physical conditions
+
+- Around 48% (30 units) are reported as fair, indicating moderate repair needs are the most common issue. While about one‑fourth (24%, 15 units) show only minor wear and tear, suggesting a sizable portion of units remain reasonably maintained.
+
+- Whereas 21% (13 units) require major repairs. Only 6% (4 units) are reported as having no visible issues, underscoring that very few units are in top shape.
+
+```{r}
+## subtitle
+subtitle_text <- str_wrap("Nearly half of the housing units require moderate repairs, while only a small fraction are in excellent condition.", 80)
+
+## physical condition data
+overall_physical_cond_dta <- 
+    housing_dta |> 
+    count(house_physical_condition) |> 
+    mutate(pct = n / sum(n)) |> 
+    mutate(pct_lab = str_c(round(pct*100, 0), "% (n=", n, ")")) |> 
+    mutate(house_physical_condition = fct_reorder(house_physical_condition, pct))
+
+
+## plotting physical condition
+p_unit_physical_condition <- 
+    overall_physical_cond_dta |> 
+    ggplot(aes(pct, house_physical_condition)) +
+    geom_col(width = 0.6) +
+    geom_text(aes(label = pct_lab), hjust = -0.2, fontface = "bold", size = 4) +
+    scale_x_continuous(labels = percent_format(), limits = c(0, 1)) +
+    labs(
+        title = glue("Reported overall physical condition of the unit (n = {nrow(housing_dta)})"),
+        subtitle = subtitle_text,
+        x = NULL,
+        y = NULL
+    ) +
+    custom_theme()
+
+## save plot
+ggsave(
+    plot = p_unit_physical_condition,
+    filename = "plot/unit_physical_condition.jpeg",
+    units = "in",
+    width = 10,
+    height = 4,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/unit_physical_condition.jpeg")
 
 ```
