@@ -8,7 +8,7 @@ custom_theme <- function() {
         axis.text.y = element_text(size = 12),
         axis.title.x = element_text(size = 16, margin = margin(t = 10)),
         axis.title.y = element_text(size = 16, margin = margin(r = 10)),
-        strip.text = element_text(size = 14),
+        strip.text = element_text(size = 16, face = "bold"),
         legend.position = "bottom"
   )
 }

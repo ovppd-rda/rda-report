@@ -40,6 +40,7 @@ library(scales)
 library(tidytext)
 library(lubridate)
 library(glue)
+library(patchwork)
 
 
 # data management source
@@ -60,18 +61,17 @@ Copies of the Figures presented in this report are available using the links bel
 
 </ol>
 
-
 # Facility information
 
 ### No of contracts awarded {.unnumbered}
 
-- Fewer contracts were awarded before 2016, usually only one or two per year. A small rise appeared in 2016 with four contracts.
+-   Fewer contracts were awarded before 2016, usually only one or two per year. A small rise appeared in 2016 with four contracts.
 
-- Awards stayed low again until 2020. While from 2021 onward, contract awards increased sharply, reaching seven in 2021 and six in 2022.
+-   Awards stayed low again until 2020. While from 2021 onward, contract awards increased sharply, reaching seven in 2021 and six in 2022.
 
-- The highest point was in 2024 with ten contracts Between 2023 and 2026, awards fluctuated between five and eight but stayed higher than earlier years.
+-   The highest point was in 2024 with ten contracts Between 2023 and 2026, awards fluctuated between five and eight but stayed higher than earlier years.
 
-- Overall, contract activity was consistently greater after 2020 compared to the previous decades.
+-   Overall, contract activity was consistently greater after 2020 compared to the previous decades.
 
 ```{r}
 # subtitle
@@ -121,16 +121,15 @@ ggsave(
 knitr::include_graphics("plot/contract_award.jpeg")
 ```
 
-
 ### Last major renovation {.unnumbered}
 
-- Before 2010, only isolated renovations were recorded, with counts of one or two in scattered years (1970, 2000, 2008). While a modest increase appeared in 2013 with three renovations.
+-   Before 2010, only isolated renovations were recorded, with counts of one or two in scattered years (1970, 2000, 2008). While a modest increase appeared in 2013 with three renovations.
 
-- Renovations rose sharply after 2020, beginning with six in 2022 and climbing to nine in 2023.
+-   Renovations rose sharply after 2020, beginning with six in 2022 and climbing to nine in 2023.
 
-- The peak occurred in 2024, with twelve renovations — the highest in the entire series.
+-   The peak occurred in 2024, with twelve renovations — the highest in the entire series.
 
-- In addition to these recorded events, 13 respondents reported making no major renovations at all.
+-   In addition to these recorded events, 13 respondents reported making no major renovations at all.
 
 ```{r}
 ## plot subtitle
@@ -179,10 +178,18 @@ ggsave(
 knitr::include_graphics("plot/major_renovation.jpeg")
 ```
 
-
 ### Housing materials
 
+- Walls: Concrete is the dominant material (about half of all wall renovations), followed by mixed half‑plywood‑half concrete. Lighter materials, plywood, and wood are used but in much smaller proportions.
+
+- Floors: Concrete again leads (nearly half), with tiles as the second most common choice. Wood and plywood appear occasionally, while mixed materials and kitchen‑specific flooring are rare.
+
+- Roofs: GI sheet overwhelmingly dominates (over 80%), with concrete and asbestos appearing only in small shares.
+
 ```{r}
+#| echo: false
+
+## plotting housing material
 house_material <- 
     housing_dta |> 
     select(roof:floor) |> 
@@ -201,17 +208,30 @@ house_material <-
         str_detect(word, "floor") ~ "concrete",
         TRUE ~ word
     )) |> 
+    filter(material != 'walls') |> 
     count(part, material, sort = TRUE) |> 
     filter(n > 1) |> 
     mutate(n = if_else(part == "roof" & material == "tiles", NA, n)) |> 
     na.omit() |> 
     group_by(part) |> 
     mutate(pct = n / sum(n)) |> 
+    mutate(pct_lab = str_c(round(pct*100, 0), "% (n=", n, ")")) |> 
     mutate(material = reorder_within(material, pct, part))
+```
+
+```{r}
+
+## subtitle
+subtitle_text <- str_wrap("Concrete dominates both walls and floors, while GI sheet is the primary roofing material; other options such as tiles, plywood, and asbestos appear less frequently.", 80)
 
 
-ggplot(house_material, aes(pct, material)) +
+## plot housing material
+p1_house_material <- 
+    house_material |> 
+    filter(part != "roof") |> 
+    ggplot(aes(pct, material)) +
     geom_col(width = 0.6) +
+    geom_text(aes(label = pct_lab), hjust = -0.2, fontface = "bold", size = 4) +
     scale_y_reordered() +
     facet_wrap(~ part, ncol = 1, scales = "free") +
     scale_x_continuous(labels = percent_format(), limits = c(0, 1)) +
@@ -221,5 +241,44 @@ ggplot(house_material, aes(pct, material)) +
     x = NULL,
     y = NULL
     ) +
-    custom_theme()
+    custom_theme() +
+    theme(
+        axis.title.x = element_text(size = 16, margin = margin(b = 0)),
+    )
+
+p2_house_material <- 
+    house_material |> 
+    filter(part == "roof") |> 
+    ggplot(aes(pct, material)) +
+    geom_col(width = 0.5) +
+    geom_text(aes(label = pct_lab), hjust = -0.2, fontface = "bold", size = 4) +
+    scale_y_reordered() +
+    facet_wrap(~ part, ncol = 1, scales = "free") +
+    scale_x_continuous(labels = percent_format(), limits = c(0, 1)) +
+    labs(
+    title = NULL,
+    subtitle = NULL,
+    x = NULL,
+    y = NULL
+    ) +
+    custom_theme() +
+    theme(
+        plot.margin = margin(t=0)
+    )
+
+p3_house_material <- p1_house_material / p2_house_material + plot_layout(heights = c(3, 0.7))
+
+## save plot
+ggsave(
+    plot = p3_house_material,
+    filename = "plot/house_material.jpeg",
+    units = "in",
+    width = 10,
+    height = 9,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/house_material.jpeg")
+
 ```
