@@ -398,7 +398,7 @@ knitr::include_graphics("plot/retirement.jpeg")
 
 # Conditions of facility
 
-### Overall physical conditions
+### Overall physical conditions {.unnumbered}
 
 - Around 48% (30 units) are reported as fair, indicating moderate repair needs are the most common issue. While about one‑fourth (24%, 15 units) show only minor wear and tear, suggesting a sizable portion of units remain reasonably maintained.
 
@@ -446,3 +446,196 @@ ggsave(
 knitr::include_graphics("plot/unit_physical_condition.jpeg")
 
 ```
+
+
+### Structural issues observed {.unnumbered}
+
+- Roof leaks/damage is the leading concern, reported by 40 occupants (27%). Plumbing problems and wall cracks/damage follow closely, each affecting around 17% of respondents.
+
+- Flooring issues (14%) and electrical problems (11%) represent other notable maintenance challenges.Less common but still present are termite/rat infestations (5%), toilet/bathroom issues (3%), and ceiling cracks/damage (3%).
+
+- No issues were reported by only 6 respondents (4%), showing that the vast majority of the housing occupants experienced at least one problem.
+
+```{r}
+
+## subtitle text
+subtitle_text <- str_wrap("Roof leaks and structural problems are the most frequently reported, while infestations and bathroom issues are less common; only a few respondents reported no issues at all.", 80)
+
+
+## housing issues data
+issues_dta <- 
+    housing_dta |> 
+    select(structural_issues) |> 
+    mutate(issues = str_split(structural_issues, ",|;")) |> 
+    unnest(cols = c(issues)) |> 
+    mutate(issues = str_trim(issues)) |> 
+    mutate(issues = case_when(
+        str_detect(issues, "CR|Bathroom|BR|Toilet|toilet") ~ "Toilet and bathroom issues",
+        str_detect(issues, "Termite|termites|rat|termite|anay") ~ "Termites and rat infestation",
+        str_detect(issues, "Ceiling|ceiling|Ceilings") ~ "Ceiling cracks/damage",
+        str_detect(issues, "roof") ~ "Roof leaks/damage",
+        str_detect(issues, "floor|flooring") ~ "Flooring issues",
+        TRUE ~ issues
+    )) |> 
+    count(issues, sort = TRUE) |> 
+    filter(n>1) |> 
+    mutate(pct = n / sum(n)) |> 
+    mutate(pct_lab = str_c(round(pct*100, 0), "% (n=", n, ")")) |> 
+    mutate(issues = fct_reorder(issues, pct))
+
+## plotting observed issues
+p_housing_issues <- 
+    issues_dta |> 
+    ggplot(aes(pct, issues)) +
+    geom_col(width = 0.6) +
+    geom_text(aes(label = pct_lab), hjust = -0.2, fontface = "bold", size = 4) +
+    scale_x_continuous(labels = percent_format(), limits = c(0, 0.5)) +
+    labs(
+        title = glue("Reported issues observed by occupants (n = {nrow(housing_dta)})"),
+        subtitle = subtitle_text,
+        x = NULL,
+        y = NULL
+    ) +
+    custom_theme()
+
+## save plot
+ggsave(
+    plot = p_housing_issues,
+    filename = "plot/housing_issues.jpeg",
+    units = "in",
+    width = 10,
+    height = 6,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/housing_issues.jpeg")
+    
+```
+
+
+### Prescribed fire extinguishers and other safey equipment
+
+```{r}
+
+## subtitle text
+subtitle_text <- str_wrap("Most units do not have prescribed fire extinguishers or other safety equipment, leaving a critical gap in emergency preparedness.", 70 )
+
+## safety quipment data
+safety_equip_dta <- 
+    housing_dta |> 
+    select(safety_equipment) |> 
+    count(safety_equipment) |> 
+    mutate(
+    pct = n / sum(n),
+    label = paste0(safety_equipment, "\n", scales::percent(pct))
+  )
+
+## plotting data
+p_safety_equipment <- 
+    safety_equip_dta |> 
+    ggplot(aes(x = 2, y = pct, fill = safety_equipment)) +
+    geom_col(width = 1, color = "white", show.legend = F) +
+    coord_polar(theta = "y") +
+    xlim(0.5, 2.5) +
+    geom_text(aes(label = label), 
+            position = position_stack(vjust = 0.5), 
+            color = "white", size = 5, fontface = "bold") +
+    labs(
+        title = "Availability of prescribed safety equipment in housing units",
+        subtitle = subtitle_text,
+        fill = "Response",
+        x = NULL,
+        y = NULL
+    ) +
+    custom_theme() +
+    theme(
+        plot.margin = margin(20, 20, 20, -20),
+        plot.title.position = "plot",
+        panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(color = "white")
+    )
+
+## save plot
+ggsave(
+    plot = p_safety_equipment,
+    filename = "plot/safety_equipment.jpeg",
+    units = "in",
+    width = 8,
+    height = 6,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/safety_equipment.jpeg")
+```
+
+
+### Parking space and waste segretation compliance {.unnumbered}
+
+- Around 44% (27 units) created a prescribed parking area while 39% (24 units) have adequate parking space provided.
+
+- On the other hand, 18% (11 units) report no designed parking space, indicating gaps in infrastructure planning.
+
+- While 90% (56 units) are fully compliant with the VSU Waste Management Policy. Only 10% (6 units) are partially compliant, showing room for improvement but overall high adherence.
+
+```{r}
+## subtitle text
+subtitle_text <- str_wrap("While waste management practices demonstrate high compliance, parking space provision remains uneven, with nearly one in five units lacking designated areas", 80)
+
+## parking space and waste management compliance data
+compliance_dta <- 
+    housing_dta |>
+    select(starts_with("compliance")) |> 
+    pivot_longer(
+        cols = everything(),
+        names_to = "area",
+        values_to = "compliance") |> 
+    mutate(area = str_replace_all(area, "_", " ")) |> 
+    mutate(area = str_remove(area, "compliance")) |> 
+    mutate(area = str_trim(area)) |> 
+    count(area, compliance) |> 
+    group_by(area) |> 
+    mutate(pct = n / sum(n)) |> 
+    mutate(pct_lab = str_c(round(pct*100, 0), "% (n=", n, ")")) |> 
+    ungroup() |> 
+    mutate(compliance = str_wrap(compliance, 40)) |> 
+    mutate(compliance = fct_reorder(compliance, pct))
+
+
+## plotting data
+p_compliance_parking_waste <- 
+    compliance_dta |> 
+    ggplot(aes(pct, compliance)) +
+    geom_col(width = 0.6) +
+    geom_text(aes(label = pct_lab), hjust = -0.1, fontface = "bold", size = 4) +
+    scale_y_reordered() +
+    facet_wrap(~ area, ncol = 1, scales = "free") +
+    scale_x_continuous(labels = percent_format(), limits = c(0, 1)) +
+    labs(
+    title = glue("Parking space provision and waste segregation Practices (n = {nrow(housing_dta)})"),
+    subtitle = subtitle_text,
+    x = NULL,
+    y = NULL
+    ) +
+    custom_theme() +
+    theme(
+        axis.title.x = element_text(size = 16, margin = margin(b = 0)),
+    )
+
+## save plot
+ggsave(
+    plot = p_compliance_parking_waste,
+    filename = "plot/compliance_parking_waste.jpeg",
+    units = "in",
+    width = 12,
+    height = 8,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/compliance_parking_waste.jpeg")
+```
+
+
