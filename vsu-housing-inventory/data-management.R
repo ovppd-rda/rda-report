@@ -13,6 +13,17 @@ custom_theme <- function() {
   )
 }
 
+## function used oftenly
+
+n_pct <- function(data){
+  data |> 
+    mutate(pct = n / sum(n)) |> 
+    mutate(pct_lab = str_c(round(pct*100, 0), "% (n=", n, ")"))
+}
+
+
+
+
 
 ## data management
 housing_dta <- 

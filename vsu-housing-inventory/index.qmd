@@ -180,11 +180,11 @@ knitr::include_graphics("plot/major_renovation.jpeg")
 
 ### Housing materials {.unnumbered}
 
-- Walls: Concrete is the dominant material (about half of all wall renovations), followed by mixed half‑plywood‑half concrete. Lighter materials, plywood, and wood are used but in much smaller proportions.
+-   Walls: Concrete is the dominant material (about half of all wall renovations), followed by mixed half‑plywood‑half concrete. Lighter materials, plywood, and wood are used but in much smaller proportions.
 
-- Floors: Concrete again leads (nearly half), with tiles as the second most common choice. Wood and plywood appear occasionally, while mixed materials and kitchen‑specific flooring are rare.
+-   Floors: Concrete again leads (nearly half), with tiles as the second most common choice. Wood and plywood appear occasionally, while mixed materials and kitchen‑specific flooring are rare.
 
-- Roofs: GI sheet overwhelmingly dominates (over 80%), with concrete and asbestos appearing only in small shares.
+-   Roofs: GI sheet overwhelmingly dominates (over 80%), with concrete and asbestos appearing only in small shares.
 
 ```{r}
 #| echo: false
@@ -283,7 +283,6 @@ knitr::include_graphics("plot/house_material.jpeg")
 
 ```
 
-
 # Occupancy details
 
 ### Civil status {.unnumbered}
@@ -327,14 +326,13 @@ knitr::include_graphics("plot/civil_stat.jpeg")
 
 ```
 
-
 ### Expected retirement {.unnumbered}
 
--  Several pronounced spikes occur, including the highest point in 2046 (five retirees). 
+-   Several pronounced spikes occur, including the highest point in 2046 (five retirees).
 
-- Other notable peaks are in 2050, 2052, 2054, 2055, and 2056, each with three to four retirees. This decade represents the most concentrated wave of retirements.
+-   Other notable peaks are in 2050, 2052, 2054, 2055, and 2056, each with three to four retirees. This decade represents the most concentrated wave of retirements.
 
-- The data suggests a long stretch of low retirements followed by a concentrated cluster in the mid‑2040s to mid‑2050s. 
+-   The data suggests a long stretch of low retirements followed by a concentrated cluster in the mid‑2040s to mid‑2050s.
 
 ```{r}
 
@@ -386,23 +384,19 @@ ggsave(
 knitr::include_graphics("plot/retirement.jpeg")
 ```
 
-
 ### Number of co-occupants {.unnumbered}
-
 
 ### Number of vehicles owned {.unnumbered}
 
-
 ### Number of pets owned {.unnumbered}
-
 
 # Conditions of facility
 
 ### Overall physical conditions {.unnumbered}
 
-- Around 48% (30 units) are reported as fair, indicating moderate repair needs are the most common issue. While about one‑fourth (24%, 15 units) show only minor wear and tear, suggesting a sizable portion of units remain reasonably maintained.
+-   Around 48% (30 units) are reported as fair, indicating moderate repair needs are the most common issue. While about one‑fourth (24%, 15 units) show only minor wear and tear, suggesting a sizable portion of units remain reasonably maintained.
 
-- Whereas 21% (13 units) require major repairs. Only 6% (4 units) are reported as having no visible issues, underscoring that very few units are in top shape.
+-   Whereas 21% (13 units) require major repairs. Only 6% (4 units) are reported as having no visible issues, underscoring that very few units are in top shape.
 
 ```{r}
 ## subtitle
@@ -447,14 +441,13 @@ knitr::include_graphics("plot/unit_physical_condition.jpeg")
 
 ```
 
-
 ### Structural issues observed {.unnumbered}
 
-- Roof leaks/damage is the leading concern, reported by 40 occupants (27%). Plumbing problems and wall cracks/damage follow closely, each affecting around 17% of respondents.
+-   Roof leaks/damage is the leading concern, reported by 40 occupants (27%). Plumbing problems and wall cracks/damage follow closely, each affecting around 17% of respondents.
 
-- Flooring issues (14%) and electrical problems (11%) represent other notable maintenance challenges.Less common but still present are termite/rat infestations (5%), toilet/bathroom issues (3%), and ceiling cracks/damage (3%).
+-   Flooring issues (14%) and electrical problems (11%) represent other notable maintenance challenges.Less common but still present are termite/rat infestations (5%), toilet/bathroom issues (3%), and ceiling cracks/damage (3%).
 
-- No issues were reported by only 6 respondents (4%), showing that the vast majority of the housing occupants experienced at least one problem.
+-   No issues were reported by only 6 respondents (4%), showing that the vast majority of the housing occupants experienced at least one problem.
 
 ```{r}
 
@@ -513,7 +506,6 @@ knitr::include_graphics("plot/housing_issues.jpeg")
     
 ```
 
-
 ### Prescribed fire extinguishers and other safey equipment {.unnumbered}
 
 ```{r}
@@ -571,14 +563,13 @@ ggsave(
 knitr::include_graphics("plot/safety_equipment.jpeg")
 ```
 
-
 ### Parking space and waste segretation compliance {.unnumbered}
 
-- Around 44% (27 units) created a prescribed parking area while 39% (24 units) have adequate parking space provided.
+-   Around 44% (27 units) created a prescribed parking area while 39% (24 units) have adequate parking space provided.
 
-- On the other hand, 18% (11 units) report no designed parking space, indicating gaps in infrastructure planning.
+-   On the other hand, 18% (11 units) report no designed parking space, indicating gaps in infrastructure planning.
 
-- While 90% (56 units) are fully compliant with the VSU Waste Management Policy. Only 10% (6 units) are partially compliant, showing room for improvement but overall high adherence.
+-   While 90% (56 units) are fully compliant with the VSU Waste Management Policy. Only 10% (6 units) are partially compliant, showing room for improvement but overall high adherence.
 
 ```{r}
 ## subtitle text
@@ -639,3 +630,108 @@ knitr::include_graphics("plot/compliance_parking_waste.jpeg")
 ```
 
 
+### Energy saving {.unnumbered}
+
+- A large majority of respondents (81%, n=50) reported using energy‑saving appliances or utilities. About one in five respondents (19%, n=12) do not use energy‑saving appliances/utilities.
+
+- Among those who use energy‑saving options, inverted appliances are the most frequently reported (48%, n=19). Solar‑powered devices (25%, n=10) and LED devices (22%, n=9) show notable adoption.
+
+- While only 2% (n=1 each) reported using rechargeable devices or simple energy‑saving practices (like turning off appliances).
+
+```{r}
+
+## caption text
+caption_text <- str_wrap("A large majority of respondents (81%, n=50) reported using energy‑saving appliances or utilities, while only 19% (n=12) indicated they do not. Inverted appliances (48%) and solar‑powered devices (25%) dominate energy‑saving adoption, while LED devices (22%) and other practices are less common.", 110)
+
+## energy saving data
+energy_saving_dta <- 
+    housing_dta |> 
+    count(energy_saving) |> 
+    n_pct() |> 
+    mutate(pct_lab = str_wrap(pct_lab, 2))
+
+## plotting energy saving data
+p1_energy_saving <- 
+    energy_saving_dta |> 
+    ggplot(aes(x = 2, y = pct, fill = energy_saving)) +
+    geom_col(width = 1, color = "white", show.legend = T) +
+    coord_polar(theta = "y") +
+    xlim(0.5, 2.5) +
+    geom_text(aes(label = pct_lab), 
+            position = position_stack(vjust = 0.5), 
+            color = "white", size = 4, fontface = "bold") +
+    labs(
+        title = NULL,
+        fill = "Do you use energy-saving\nappliances/utilities?",
+        y = NULL,
+        x = NULL
+    ) +
+    custom_theme() +
+    theme(
+        plot.margin = margin(0, 0, 0, 0),
+        plot.title.position = "plot",
+        plot.caption.position = "plot",
+        panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(color = "white"),
+        axis.title.y = element_text(face = "bold"),
+        legend.position = "top"
+    )
+
+
+## energy saving devices list
+energy_saving_devices_dta <- 
+    housing_dta |> 
+    select(energy_saving_list) |>
+    mutate(energy_saving_list = str_to_lower(energy_saving_list)) |> 
+    mutate(energy_saving = case_when(
+        str_detect(energy_saving_list, "inverter|inverted") ~ "Inverted appliances",
+        str_detect(energy_saving_list, "led") ~ "LED devices",
+        str_detect(energy_saving_list, "solar") ~ "solar-powered devices",
+        str_detect(energy_saving_list, "recharge") ~ "rechargeable devices",
+        str_detect(energy_saving_list, "only during") ~ "energy-saving practices (e.g., turning off devices and appliances)"
+    )) |> 
+    na.omit() |> 
+    count(energy_saving) |> 
+    n_pct() |> 
+    mutate(energy_saving = str_wrap(energy_saving, 40)) |> 
+    mutate(energy_saving = fct_reorder(energy_saving, pct))
+
+## plot energy saving devices
+p2_energy_saving_devices <- 
+    energy_saving_devices_dta |> 
+    ggplot(aes(pct, energy_saving)) +
+    geom_col(width = 0.6) +
+    geom_text(aes(label = pct_lab), hjust = -0.2, fontface = "bold", size = 4) +
+    scale_x_continuous(labels = percent_format(), limits = c(0, 0.70)) +
+    labs(
+        title = glue("Use of energy‑saving appliances and utilities among occupants"),
+        subtitle = caption_text,,
+        y = NULL,
+        x = NULL
+    ) +
+    custom_theme() +
+    theme(
+        plot.title = element_text(hjust = 0, margin = margin(l = 30, b = 10)),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(margin = margin(l = 30, b=20)),
+        margin = margin(l=0, t=10)
+    )
+
+
+p_energy_saving <- p2_energy_saving_devices + p1_energy_saving + plot_layout(width = c(1, 1.4))
+
+## save plot
+ggsave(
+    plot = p_energy_saving,
+    filename = "plot/energy_saving.jpeg",
+    units = "in",
+    width = 12,
+    height = 6,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/energy_saving.jpeg")
+
+```
