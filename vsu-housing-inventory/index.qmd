@@ -629,14 +629,13 @@ ggsave(
 knitr::include_graphics("plot/compliance_parking_waste.jpeg")
 ```
 
-
 ### Energy saving {.unnumbered}
 
-- A large majority of respondents (81%, n=50) reported using energy‑saving appliances or utilities. About one in five respondents (19%, n=12) do not use energy‑saving appliances/utilities.
+-   A large majority of respondents (81%, n=50) reported using energy‑saving appliances or utilities. About one in five respondents (19%, n=12) do not use energy‑saving appliances/utilities.
 
-- Among those who use energy‑saving options, inverted appliances are the most frequently reported (48%, n=19). Solar‑powered devices (25%, n=10) and LED devices (22%, n=9) show notable adoption.
+-   Among those who use energy‑saving options, inverted appliances are the most frequently reported (48%, n=19). Solar‑powered devices (25%, n=10) and LED devices (22%, n=9) show notable adoption.
 
-- While only 2% (n=1 each) reported using rechargeable devices or simple energy‑saving practices (like turning off appliances).
+-   While only 2% (n=1 each) reported using rechargeable devices or simple energy‑saving practices (like turning off appliances).
 
 ```{r}
 
@@ -734,4 +733,102 @@ ggsave(
 # display plot
 knitr::include_graphics("plot/energy_saving.jpeg")
 
+```
+
+# Compliance with housing policy
+
+### Lease renewal
+
+-   The vast majority of units (94%, n=58) have current and valid leases, showing that lease renewal requirements are generally well‑observed.
+
+-   A small portion (5%, n=3) have expired leases but are already in the process of renewal.
+
+-   Only 2% (n=1) of units have expired leases with no renewal, highlighting very limited non‑compliance.
+
+```{r}
+## subtitle
+subtitle_text <- str_wrap("The majority of units (94%, n=58) have current and valid leases, while a small proportion are either in the process of renewal (5%, n=3) or have expired without renewal (2%, n=1).", 80)
+
+p_lease_renewal <- 
+    housing_dta |> 
+    count(lease_renewal) |> 
+    n_pct() |> 
+    ggplot(aes(pct, lease_renewal)) +
+    geom_col(width = 0.5) +
+    geom_text(aes(label = pct_lab), hjust = -0.2, fontface = "bold", size = 4) +
+    scale_x_continuous(labels = percent_format(), limits = c(0, 1.2), breaks = seq(0, 1, 0.2)) +
+    labs(
+        title = glue("Status of lease renewal (n = {nrow(housing_dta)})"),
+        subtitle = subtitle_text,
+        x = NULL,
+        y = NULL
+    ) +
+    custom_theme()
+
+## save plot
+ggsave(
+    plot = p_lease_renewal,
+    filename = "plot/lease_renewal.jpeg",
+    units = "in",
+    width = 10,
+    height = 4,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/lease_renewal.jpeg")
+
+```
+
+### Occupants compliance
+
+```{r}
+## subtitle text
+subtitle_text <- str_wrap("Most units comply with residential use rules: 94% are used strictly for family, 95% report no boarders, and 100% have never sub‑leased. Only a few cases show minor exceptions.", 70)
+
+
+## plotting occupancy
+p_occupancy <- 
+    housing_dta |>
+    select(housing_used_residential, house_boarders, house_sub_leased) |> 
+    pivot_longer(
+        cols = everything(),
+        names_to = "question",
+        values_to = "response"
+    ) |> 
+    count(question, response) |> 
+    group_by(question) |> 
+    n_pct() |> 
+    ungroup() |> 
+    mutate(description = case_when(
+        str_detect(question, "boarders") ~ "Are there any boarders/lodgers (students or VSU employees) residing in the unit?",
+        str_detect(question, "leased") ~ "Have you ever sub-leased or assigned your housing unit to another person?",
+        str_detect(question, "residential") ~ "Is the housing unit used strictly for residential purposes by immediate family and house help only?"
+    )) |> 
+    mutate(description = str_wrap(description, 40)) |> 
+    ggplot(aes(pct, description, fill = response)) +
+    geom_col(position = position_dodge(preserve = "single")) +
+    geom_text(aes(label = pct_lab), position = position_dodge(width = 0.9), hjust = -0.1) +
+    scale_x_continuous(labels = percent_format(), limits = c(0, 1.2), breaks = seq(0, 1, 0.2)) +
+    labs(
+        subtitle = subtitle_text,
+        title = "Occupancy and residential use compliance",
+        x = NULL,
+        y = NULL
+    ) +
+    custom_theme()
+
+
+## save plot
+ggsave(
+    plot = p_occupancy,
+    filename = "plot/occupancy.jpeg",
+    units = "in",
+    width = 10,
+    height = 6,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/occupancy.jpeg")
 ```
