@@ -880,7 +880,305 @@ knitr::include_graphics("plot/noise_disturbance.jpeg")
 
 # Maintenance and services
 
+### Frequency of repairs  requested {.unnumbered}
+
+- Over half of respondents (52%, n=32) reported no repair requests in the past year,
+
+- About one‑third (35%, n=22) requested repairs 1–2 times and Only 8% (n=5) reported 3–5 repair requests, and 5% (n=3) reported more than 5.
 
 ```{r}
+title_plot <- glue("Frequency of repairs requested (n = {nrow(housing_dta)})")
+subtitle_text <- str_wrap("Over half of respondents (52%, n=32) reported no repair requests in the past year, while 35% (n=22) requested repairs 1–2 times. Only a small share experienced more frequent issues, with 8% (n=5) requesting 3–5 times and 5% (n=3) more than 5 times.", 80)
 
+p_freq_repair <- plt_barplot(housing_dta, variable = repair_frequency, title_plot = title_plot)
+
+## saving plot
+ggsave(
+    plot = p_freq_repair,
+    filename = "plot/freq_repair.jpeg",
+    units = "in",
+    width = 10,
+    height = 5,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/freq_repair.jpeg")
 ```
+
+
+### Satisfaction on the timeliness of repair services {.unnumbered}
+
+```{r}
+title_plot <- glue("How satisfied are you with the timeliness of repair services provided? (n = {nrow(housing_dta)})")
+subtitle_text <- str_wrap("subtitle text", 80)
+
+p_sat_timeliness_repair <- plt_barplot(housing_dta, sat_timeliness_repair, title_plot)
+
+## saving plot
+ggsave(
+    plot = p_sat_timeliness_repair,
+    filename = "plot/sat_timeliness_repair.jpeg",
+    units = "in",
+    width = 10,
+    height = 5,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/sat_timeliness_repair.jpeg")
+```
+
+
+### Quality of repairs conducted {.unnumbered}
+
+```{r}
+title_plot <- glue("Perceived quality of repairs provided (n = {nrow(housing_dta)})")
+
+subtitle_text <- str_wrap("subtitle text", 70)
+
+p_quality_repair <- plt_barplot(housing_dta, quality_repair, title_plot)
+
+## saving plot
+ggsave(
+    plot = p_quality_repair,
+    filename = "plot/quality_repair.jpeg",
+    units = "in",
+    width = 10,
+    height = 4,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/quality_repair.jpeg")
+```
+
+
+### Satisfaction with maintenance {.unnumbered}
+
+```{r}
+title_plot <- glue("Satisfaction with maintenance fee rates (n = {nrow(housing_dta)})")
+
+subtitle_text <- str_wrap("subtitle text", 70)
+
+p_sat_maintenance_fee <- plt_barplot(housing_dta, sat_maintenance_fee, title_plot)
+
+## saving plot
+ggsave(
+    plot = p_sat_maintenance_fee,
+    filename = "plot/sat_maintenance_fee.jpeg",
+    units = "in",
+    width = 10,
+    height = 4,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/sat_maintenance_fee.jpeg")
+```
+
+
+### Reliability of utility services {.unnumbered}
+
+```{r}
+title_plot <- glue("In terms of the utility services provided by the university,\nwhich services are consistently reliable? (n = {nrow(housing_dta)})")
+
+subtitle_text <- str_wrap("subtitle text", 70)
+
+serv_reliability_dta <- 
+    housing_dta |> 
+    select(services_reliability) |> 
+    mutate(services_reliability = str_split(services_reliability, ",")) |> 
+    unnest() |> 
+    mutate(services_reliability = str_trim(services_reliability)) |> 
+    filter(!str_detect(services_reliability, "i have")) |> 
+    mutate(services_reliability = if_else(services_reliability == "for water supply", "Water Supply", services_reliability))
+
+
+p_service_reliability <- plt_barplot(serv_reliability_dta, services_reliability, title_plot)
+
+## saving plot
+ggsave(
+    plot = p_service_reliability,
+    filename = "plot/service_reliability.jpeg",
+    units = "in",
+    width = 10,
+    height = 5,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/service_reliability.jpeg")
+```
+
+
+### Energy subsidy awareness {.unnumbered}
+
+```{r}
+## subtitle text
+subtitle_text <- str_wrap("", 80)
+
+p_electric_subsidy <- 
+    housing_dta |> 
+    select(electric_subsidy) |> 
+    count(electric_subsidy) |> 
+    n_pct() |> 
+    mutate(pct_lab = str_wrap(pct_lab, 2)) |> 
+    ggplot(aes(x = 2, y = pct, fill = electric_subsidy)) +
+    geom_col(width = 1, color = "white", show.legend = T) +
+    coord_polar(theta = "y") +
+    xlim(0.7, 2.5) +
+    geom_text(aes(label = pct_lab), 
+            position = position_stack(vjust = 0.5), 
+            color = "white", size = 5, fontface = "bold") +
+    labs(
+        title = str_wrap("Are you aware of the 100 kW electricity subsidy (to be reduced to 50 kW in 2026–2030 and removed thereafter)?", 60),
+        subtitle = subtitle_text,
+        fill = "Response",
+        x = NULL,
+        y = NULL
+    ) +
+    custom_theme() +
+    theme(
+        plot.margin = margin(10, 10, 10, 10),
+        plot.title.position = "plot",
+        panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(color = "white"),
+        legend.position = "right"
+    )
+
+## saving plot
+ggsave(
+    plot = p_electric_subsidy,
+    filename = "plot/electric_subsidy.jpeg",
+    units = "in",
+    width = 8,
+    height = 6,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/electric_subsidy.jpeg")
+```
+
+
+# Unit improvements and extensions {.unnumbered}
+
+
+```{r}
+## subtitle text
+subtitle_text <- str_wrap("", 80)
+
+p_housing_improv <- 
+    housing_dta |> 
+    select(housing_made_improvements, permit_improvement,
+    approved_extension, improvement_alter_unit, improvement_turnover) |> 
+    pivot_longer(
+        cols = everything(),
+        names_to = "question",
+        values_to = "response"
+    ) |> 
+    count(question, response) |> 
+    group_by(question) |> 
+    n_pct() |> 
+    ungroup() |> 
+    mutate(description = case_when(
+        str_detect(question, "permit") ~ "Did you secure a written permit before starting the improvements?",
+        str_detect(question, "turnover") ~ "Do you understand that all improvements become university property upon turnover?",
+        str_detect(question, "alter_unit") ~ "Do the improvements alter the basic design of the housing unit?",
+        str_detect(question, "housing_made") ~ "Have you made any improvements or extensions to your housing unit?",
+        str_detect(question, "approved_") ~ "Was the extension approved by the General Services Office?"
+    )) |>
+    mutate(description = str_wrap(description, 40)) |>
+    mutate(pct_lab = str_wrap(pct_lab, 3)) |> 
+    ggplot(aes(pct, description, fill = response)) +
+    geom_col(width = 0.8) +
+    geom_text(aes(label = pct_lab), position = position_fill(vjust = 0.2), hjust = -0, fontface = 'bold', size = 4, color = "white") +
+    scale_x_continuous(labels = percent_format(), limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
+    scale_fill_manual(values = c("#ed6a5a", "#243e36", "#064789")) +
+    labs(
+        subtitle = subtitle_text,
+        title = "Unit improvements and extensions ",
+        x = NULL,
+        y = NULL
+    ) +
+    custom_theme()
+
+## saving plot
+ggsave(
+    plot = p_housing_improv,
+    filename = "plot/housing_improv.jpeg",
+    units = "in",
+    width = 10,
+    height = 6,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/housing_improv.jpeg")
+```
+
+
+### Condition of improvement {.unnumbered}
+
+```{r}
+title_plot <- glue("Condition of improvements (n = {nrow(housing_dta)})")
+subtitle_text <- str_wrap("subtitle text", 70)
+
+p_improve_condition <- plt_barplot(housing_dta, improvement_condition, title_plot)
+
+## saving plot
+ggsave(
+    plot = p_improve_condition,
+    filename = "plot/improve_condition.jpeg",
+    units = "in",
+    width = 10,
+    height = 4,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/improve_condition.jpeg")
+```
+
+
+# Future needs and feedbacks
+
+### Services and amenities needs
+
+```{r}
+title_plot <- glue("Services and ameneties wished by occupants (n = {nrow(housing_dta)})")
+subtitle_text <- str_wrap("", 70)
+
+serv_ameneties_dta <- 
+    housing_dta |> 
+    select(wish_ameneties) |> 
+    mutate(wish_ameneties = str_split(wish_ameneties, ",")) |> 
+    unnest(cols= c(wish_ameneties)) |> 
+    mutate(wish_ameneties = str_trim(wish_ameneties)) |>  
+    mutate(wish_ameneties = case_when(
+        str_detect(wish_ameneties, "park|play") ~ "Recreational space",
+        str_detect(wish_ameneties, "fire|Fire") ~ "Fire extinguisher",
+        str_detect(wish_ameneties, "kitchen|Kitchen|cooking") ~ "Kitchen",
+        str_detect(wish_ameneties, "garden|backyard") ~ "Garden/green space",
+        str_detect(wish_ameneties, "laundry") ~ "Laundry Area",
+        TRUE ~ wish_ameneties
+    ))
+
+p_serv_ameneties <- plt_barplot(serv_ameneties_dta, wish_ameneties, title_plot)
+
+# saving plot
+ggsave(
+    plot = p_serv_ameneties,
+    filename = "plot/serv_ameneties.jpeg",
+    units = "in",
+    width = 10,
+    height = 6,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/serv_ameneties.jpeg")
+```
+

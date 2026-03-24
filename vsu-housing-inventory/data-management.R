@@ -13,6 +13,12 @@ custom_theme <- function() {
   )
 }
 
+## data management
+housing_dta <- 
+  read_excel("data/20260318-vsu-housing-inventory.xlsx") |> 
+  clean_names()
+
+
 ## function used oftenly
 
 n_pct <- function(data){
@@ -23,9 +29,34 @@ n_pct <- function(data){
 
 
 
+## bar plot function
+title_plot <- glue(" (n = {nrow(housing_dta)})")
+subtitle_text <- str_wrap("", 70)
+
+plt_barplot <- function(data, variable, title_plot){
+  data |> 
+    select({{variable}}) |> 
+    na.omit() |> 
+    count({{variable}}) |> 
+    filter(n > 1) |> 
+    n_pct() |> 
+    mutate(var_reordered = fct_reorder({{variable}}, pct)) |> 
+    ggplot(aes(pct, var_reordered)) +
+    geom_col(width = 0.6) +
+    geom_text(aes(label = pct_lab), hjust = -0.1, fontface = "bold", size = 4) +
+    scale_x_continuous(labels = percent_format(), limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
+    coord_cartesian(expand = TRUE, clip = "off") +
+    labs(
+        title = title_plot,
+        subtitle = subtitle_text,
+        x = NULL,
+        y = NULL
+    ) +
+    custom_theme()
+}
 
 
-## data management
-housing_dta <- 
-  read_excel("data/20260318-vsu-housing-inventory.xlsx") |> 
-  clean_names()
+
+
+
+
