@@ -767,6 +767,19 @@ p_lease_renew <-
     ) +
     custom_theme()
 
+## save plot
+ggsave(
+    plot = p_lease_renewal,
+    filename = "plot/lease_renewal.jpeg",
+    units = "in",
+    width = 10,
+    height = 4,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/lease_renewal.jpeg")
+
 ```
 
 
