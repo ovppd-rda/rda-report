@@ -752,7 +752,7 @@ lease_dta <-
     n_pct()
 
 ## plotting lease data
-p_lease_renew <- 
+p_lease_renewal <- 
     lease_dta |> 
     ggplot(aes(pct, lease_renewal)) +
     geom_col(width = 0.6) +
@@ -837,4 +837,8 @@ knitr::include_graphics("plot/occupancy.jpeg")
 ```
 
 
-###  {.unnumbered}
+###  Noise disturbance policy {.unnumbered}
+
+```{r}
+
+```
