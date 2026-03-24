@@ -735,13 +735,15 @@ knitr::include_graphics("plot/energy_saving.jpeg")
 
 ```
 
+###  Lease renewal {.unnumbered}
 
-### {.unnumbered}
+- The vast majority of units (94%, n=58) have current and valid leases, showing that lease renewal requirements are generally well‑observed.
+
+- A small portion (5%, n=3) have expired leases but are already in the process of renewal.
+
+- Only 2% (n=1) of units have expired leases with no renewal, highlighting very limited non‑compliance.
 
 ```{r}
-housing_dta |> 
-    glimpse()
-
 ## lease data
 lease_dta <- 
     housing_dta |> 
@@ -767,7 +769,59 @@ p_lease_renew <-
 
 ```
 
-### {.unnumbered}
+
+###  Occupants compliance {.unnumbered}
+
+```{r}
+## subtitle text
+subtitle_text <- str_wrap("Most units comply with residential use rules: 94% are used strictly for family, 95% report no boarders, and 100% have never sub‑leased. Only a few cases show minor exceptions.", 70)
 
 
-### {.unnumbered}
+## plotting occupancy
+p_occupancy <- 
+    housing_dta |>
+    select(housing_used_residential, house_boarders, house_sub_leased) |> 
+    pivot_longer(
+        cols = everything(),
+        names_to = "question",
+        values_to = "response"
+    ) |> 
+    count(question, response) |> 
+    group_by(question) |> 
+    n_pct() |> 
+    ungroup() |> 
+    mutate(description = case_when(
+        str_detect(question, "boarders") ~ "Are there any boarders/lodgers (students or VSU employees) residing in the unit?",
+        str_detect(question, "leased") ~ "Have you ever sub-leased or assigned your housing unit to another person?",
+        str_detect(question, "residential") ~ "Is the housing unit used strictly for residential purposes by immediate family and house help only?"
+    )) |> 
+    mutate(description = str_wrap(description, 40)) |> 
+    ggplot(aes(pct, description, fill = response)) +
+    geom_col(position = position_dodge(preserve = "single")) +
+    geom_text(aes(label = pct_lab), position = position_dodge(width = 0.9), hjust = -0.1) +
+    scale_x_continuous(labels = percent_format(), limits = c(0, 1.2), breaks = seq(0, 1, 0.2)) +
+    labs(
+        subtitle = subtitle_text,
+        title = "Occupancy and residential use compliance",
+        x = NULL,
+        y = NULL
+    ) +
+    custom_theme()
+
+
+## save plot
+ggsave(
+    plot = p_occupancy,
+    filename = "plot/occupancy.jpeg",
+    units = "in",
+    width = 10,
+    height = 6,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/occupancy.jpeg")
+```
+
+
+###  {.unnumbered}
