@@ -15,8 +15,9 @@ custom_theme <- function() {
 
 ## data management
 housing_dta <- 
-  read_excel("data/20260318-vsu-housing-inventory.xlsx") |> 
-  clean_names()
+  read_excel("data/20260326-vsu-housing-inventory.xlsx") |> 
+  clean_names() |> 
+  mutate(contract_date = as_date(as.numeric(contract_date), origin = "1899-12-30"))
 
 
 ## function used oftenly
