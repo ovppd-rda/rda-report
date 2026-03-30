@@ -65,13 +65,13 @@ Copies of the Figures presented in this report are available using the links bel
 
 ### No of contracts awarded {.unnumbered}
 
--   Fewer contracts were awarded before 2016, usually only one or two per year. A small rise appeared in 2016 with four contracts.
+-   Contract awards were minimal, usually only one to three per year, with a small rise in 2016
 
--   Awards stayed low again until 2020. While from 2021 onward, contract awards increased sharply, reaching seven in 2021 and six in 2022.
+-   Awards remained low until 2020, then surged dramatically, reaching 17 in 2021 and 31 in 2022.
 
--   The highest point was in 2024 with ten contracts Between 2023 and 2026, awards fluctuated between five and eight but stayed higher than earlier years.
+-   The highest number of awards occurred in 2024 with 33 contracts. Between 2023 and 2026, awards fluctuated (23 in 2023, 33 in 2024, 4 in 2025, and 8 in 2026) but stayed higher than pre‑2020 levels.
 
--   Overall, contract activity was consistently greater after 2020 compared to the previous decades.
+-   Contract activity was consistently greater after 2020 compared to the previous decades.
 
 ```{r}
 # subtitle
@@ -122,19 +122,24 @@ ggsave(
 knitr::include_graphics("plot/contract_award.jpeg")
 ```
 
+
 ### Last major renovation {.unnumbered}
 
--   Before 2010, only isolated renovations were recorded, with counts of one or two in scattered years (1970, 2000, 2008). While a modest increase appeared in 2013 with three renovations.
+- Renovations were isolated, usually only one per year (1970, 2000, 2005–2007), with a modest spike in 2008 (four).
 
--   Renovations rose sharply after 2020, beginning with six in 2022 and climbing to nine in 2023.
+- Renovations increased slightly, with notable counts in 2013 (six) and 2014 (three), but overall remained modest.
 
--   The peak occurred in 2024, with twelve renovations — the highest in the entire series.
+- Renovations rose dramatically, reaching 20 in 2022, 18 in 2023, and 13 in 2024.
 
--   In addition to these recorded events, 13 respondents reported making no major renovations at all.
+- Renovations climbed again to 20, before dropping to 8 in 2026.
+
+- Renovation activity was consistently greater after 2020 compared to earlier decades, marking a clear shift in housing maintenance practices.
+
+- Five respondents reported making no major renovations at all.
 
 ```{r}
 ## plot subtitle
-subtitle_text <- str_wrap("Fewer major renovations were recorded before 2010, but activity rose sharply after 2020, peaking in 2024 with 12 renovations; 13 respondents reported making no major renovations at all.", 80)
+subtitle_text <- str_wrap("Major renovations were low before 2010, with only isolated cases (mostly one per year). Activity gradually increased between 2010 and 2020, then surged sharply after 2021. Renovations peaked at 20 in both 2022 and 2025, with a notable high of 18 in 2023 and 13 in 2024. In addition, 5 respondents reported no major renovations at all.", 90)
 
 ## number of renovation
 major_renovation_dta <- 
@@ -210,6 +215,7 @@ house_material <-
         TRUE ~ word
     )) |> 
     filter(material != 'walls') |> 
+    filter(!str_detect(material, "3|2|1")) |> 
     count(part, material, sort = TRUE) |> 
     filter(n > 1) |> 
     mutate(n = if_else(part == "roof" & material == "tiles", NA, n)) |> 
@@ -290,12 +296,13 @@ knitr::include_graphics("plot/house_material.jpeg")
 
 ```{r}
 ## subtitle
-subtitle_text <- str_wrap("Most occupants are married (65%), followed by single (31%), while only a small share are widowed or separated.", 70)
+subtitle_text <- str_wrap("Most occupants are married (73%), followed by single (22%), while only a small share are widowed or separated.", 70)
 
 ## plotting civilt status
 p_civil_stat <- 
     housing_dta |> 
     mutate(civil_status = if_else(str_detect(civil_status, "Single"), "Single", civil_status)) |> 
+    mutate(civil_status = str_to_sentence(civil_status)) |> 
     count(civil_status) |> 
     mutate(pct = n / sum(n)) |> 
     mutate(pct_lab = str_c(round(pct*100, 0), "% (n=", n, ")")) |> 
@@ -329,16 +336,16 @@ knitr::include_graphics("plot/civil_stat.jpeg")
 
 ### Expected retirement {.unnumbered}
 
--   Several pronounced spikes occur, including the highest point in 2046 (five retirees).
+- The data suggests a long stretch of scattered retirements followed by concentrated waves in the mid‑2030s and again in the mid‑2040s to mid‑2050s
 
--   Other notable peaks are in 2050, 2052, 2054, 2055, and 2056, each with three to four retirees. This decade represents the most concentrated wave of retirements.
+- Expected retirements are scattered from 2024 through the early 2030s, with only modest peaks (e.g., 6 in 2026, 5 in 2028 and 2030). While a pronounced spike occurs in 2036 with 11 retirees, marking the first significant wave.
 
--   The data suggests a long stretch of low retirements followed by a concentrated cluster in the mid‑2040s to mid‑2050s.
+- Several concentrated peaks appear, including 10 in 2046, 7 in 2054, and 9 in 2056. This period represents the most consistent cluster of retirements.
 
 ```{r}
 
 ## subtitle
-subtitle_text <- str_wrap("Expected retirements remain low and scattered in the early years, but several peaks appear between 2046 and 2056, with counts reaching up to five retirees in a single year.", 80)
+subtitle_text <- str_wrap("Expected retirements from 2026 onward, show several peaks: 11 retirees in 2036, 10 in 2046, and 9 in 2056. Other notable highs include 6 in 2026, 20 in 2022, and 7 in 2054.", 80)
 
 ## retirement date data
 retirement_date_dta <- 
@@ -395,9 +402,9 @@ knitr::include_graphics("plot/retirement.jpeg")
 
 ### Overall physical conditions {.unnumbered}
 
--   Around 48% (30 units) are reported as fair, indicating moderate repair needs are the most common issue. While about one‑fourth (24%, 15 units) show only minor wear and tear, suggesting a sizable portion of units remain reasonably maintained.
+- The largest share of units (43%, n=67) are rated Fair, indicating moderate repairs are the most common issue. About one‑third (31%, n=49) are in Good condition, showing only minor wear and tear.
 
--   Whereas 21% (13 units) require major repairs. Only 6% (4 units) are reported as having no visible issues, underscoring that very few units are in top shape.
+- Whereas, 16% (n=25) are in Poor condition, requiring major repairs. Only 10% (n=16) are rated Excellent, underscoring that very few units are free of visible issues.
 
 ```{r}
 ## subtitle
@@ -444,11 +451,12 @@ knitr::include_graphics("plot/unit_physical_condition.jpeg")
 
 ### Structural issues observed {.unnumbered}
 
--   Roof leaks/damage is the leading concern, reported by 40 occupants (27%). Plumbing problems and wall cracks/damage follow closely, each affecting around 17% of respondents.
+- Roof leaks or damage are the most common issue, reported by 28% (n=98) of respondents.
 
--   Flooring issues (14%) and electrical problems (11%) represent other notable maintenance challenges.Less common but still present are termite/rat infestations (5%), toilet/bathroom issues (3%), and ceiling cracks/damage (3%).
+- Wall cracks/damage affect 20% (n=70), while plumbing problems (15%, n=54) and flooring issues (15%, n=52) are also significant. 
+- Electrical problems are reported by 11% (n=38). Less common but still present are termite/rat infestations (3%, n=10), ceiling cracks (1%, n=5), and toilet/bathroom issues (1%, n=5).
 
--   No issues were reported by only 6 respondents (4%), showing that the vast majority of the housing occupants experienced at least one problem.
+- Only 5% (n=18) of respondents reported no problems, highlighting that the vast majority of housing units experience at least one maintenance concern.
 
 ```{r}
 
@@ -509,6 +517,10 @@ knitr::include_graphics("plot/housing_issues.jpeg")
 
 ### Prescribed fire extinguishers and other safey equipment {.unnumbered}
 
+- A large majority of housing units (85%) lack prescribed safety equipment such as fire extinguishers, leaving them vulnerable in emergencies.
+
+- Only 15% of units reported having the required safety equipment, showing very limited adherence to safety standards.
+
 ```{r}
 
 ## subtitle text
@@ -566,11 +578,10 @@ knitr::include_graphics("plot/safety_equipment.jpeg")
 
 ### Parking space and waste segretation compliance {.unnumbered}
 
--   Around 44% (27 units) created a prescribed parking area while 39% (24 units) have adequate parking space provided.
+- Parking space provision remains uneven, with 42% (n=66) reporting adequate space and another 42% (n=66) creating their own prescribed parking areas, while 16% (n=25) have no designated space. 
 
--   On the other hand, 18% (11 units) report no designed parking space, indicating gaps in infrastructure planning.
+- In contrast, waste segregation shows strong compliance: 92% (n=145) are fully compliant with the VSU Waste Management Policy, 6% (n=10) partially compliant, and only 1% (n=2) not compliant.
 
--   While 90% (56 units) are fully compliant with the VSU Waste Management Policy. Only 10% (6 units) are partially compliant, showing room for improvement but overall high adherence.
 
 ```{r}
 ## subtitle text
@@ -632,16 +643,18 @@ knitr::include_graphics("plot/compliance_parking_waste.jpeg")
 
 ### Energy saving {.unnumbered}
 
--   A large majority of respondents (81%, n=50) reported using energy‑saving appliances or utilities. About one in five respondents (19%, n=12) do not use energy‑saving appliances/utilities.
+- A large majority of respondents (76%, n=119) reported using energy‑saving appliances or utilities, while 24% (n=38) do not.
 
--   Among those who use energy‑saving options, inverted appliances are the most frequently reported (48%, n=19). Solar‑powered devices (25%, n=10) and LED devices (22%, n=9) show notable adoption.
+- Among those adopting energy‑saving options, inverted appliances are the most frequently reported (54%, n=49).
 
--   While only 2% (n=1 each) reported using rechargeable devices or simple energy‑saving practices (like turning off appliances).
+- Solar‑powered devices (29%, n=26) and LED devices (16%, n=14) show significant uptake.
+
+- Only 1% (n=1) reported depending mainly on simple energy‑saving practices such as turning off appliances.
 
 ```{r}
 
 ## caption text
-caption_text <- str_wrap("A large majority of respondents (81%, n=50) reported using energy‑saving appliances or utilities, while only 19% (n=12) indicated they do not. Inverted appliances (48%) and solar‑powered devices (25%) dominate energy‑saving adoption, while LED devices (22%) and other practices are less common.", 110)
+caption_text <- str_wrap("A large majority of respondents reported using energy-saving appliances or utilities, while 24% indicated they do not. Among those adopting energy-saving measures, inverted appliances are the most common, followed by solar-powered devices and LED devices.", 110)
 
 ## energy saving data
 energy_saving_dta <- 
@@ -738,13 +751,16 @@ knitr::include_graphics("plot/energy_saving.jpeg")
 
 ### Lease renewal {.unnumbered}
 
--   The vast majority of units (94%, n=58) have current and valid leases, showing that lease renewal requirements are generally well‑observed.
+-   The vast majority of units (94%, n=148) have current and valid leases, showing that lease renewal requirements are generally well‑observed.
 
--   A small portion (5%, n=3) have expired leases but are already in the process of renewal.
+-   A small portion (3%, n=4) have expired leases but are already in the process of renewal.
 
--   Only 2% (n=1) of units have expired leases with no renewal, highlighting very limited non‑compliance.
+-   Only 3% (n=5) of units have expired leases with no renewal, highlighting very limited non‑compliance.
 
 ```{r}
+## caption
+subtitle_text <- str_wrap("Most leases remain current and valid, with only a small share either expired but under renewal or expired without renewal", 75)
+
 ## lease data
 lease_dta <- 
     housing_dta |> 
@@ -762,7 +778,7 @@ p_lease_renewal <-
     coord_cartesian(expand = TRUE, clip = "off") +
     labs(
         title = glue("Status of lease renewal (n = {nrow(housing_dta)})"),
-        # subtitle = subtitle_text,
+        subtitle = subtitle_text,
         x = NULL,
         y = NULL
     ) +
@@ -783,11 +799,19 @@ knitr::include_graphics("plot/lease_renewal.jpeg")
 
 ```
 
+
+
 ### Occupants compliance {.unnumbered}
+
+- Most housing units are used strictly for residential purposes by immediate family and house help, showing adherence to intended use.
+
+- Only a very small number of respondents reported ever sub‑leasing or assigning their unit to another person. Also, a small minority reported having boarders or lodgers.
+
+- Overall, the data highlights that compliance with residential use rules is overwhelmingly high, with only minor exceptions reported.
 
 ```{r}
 ## subtitle text
-subtitle_text <- str_wrap("Most units comply with residential use rules: 94% are used strictly for family, 95% report no boarders, and 100% have never sub‑leased. Only a few cases show minor exceptions.", 70)
+subtitle_text <- str_wrap("Most housing units follow residential use rules, being occupied strictly by family members and house help. Only a very small number reported having boarders or engaging in sub‑leasing.", 70)
 
 
 ## plotting occupancy
@@ -836,11 +860,19 @@ ggsave(
 knitr::include_graphics("plot/occupancy.jpeg")
 ```
 
+
+
 ### Noise disturbance policy {.unnumbered}
+
+-  The vast majority of housing units consistently follow noise regulations, reporting no disturbances.
+
+- A small number of units occasionally experience minor noise issues. Only a very few units report frequent disturbances, showing that serious noise problems are uncommon.
+
+- The data highlights that noise regulation compliance is high, with only minimal deviations.
 
 ```{r}
 ## subtitle text
-subtitle_text <- str_wrap("Most units are consistently compliant with noise regulations, with 92% (n=57) reporting no disturbances. Only 5% (n=3) occasionally and 3% (n=2) frequently experience issues", 70)
+subtitle_text <- str_wrap("Most units are consistently compliant with noise regulations, with 92% (n=145) reporting no disturbances. Only 6% occasionally and 1% frequently experience issues", 70)
 
 ## plotting noise disturbance
 p_noise_disturbance <- 
@@ -886,7 +918,8 @@ knitr::include_graphics("plot/noise_disturbance.jpeg")
 
 ```{r}
 title_plot <- glue("Frequency of repairs requested (n = {nrow(housing_dta)})")
-subtitle_text <- str_wrap("Over half of respondents (52%, n=32) reported no repair requests in the past year, while 35% (n=22) requested repairs 1–2 times. Only a small share experienced more frequent issues, with 8% (n=5) requesting 3–5 times and 5% (n=3) more than 5 times.", 80)
+
+subtitle_text <- str_wrap("Over half of respondents (54%, n=84) reported no repair requests in the past year, while 37% (n=58) requested repairs 1–2 times. Only a small share experienced more frequent issues, with 5% (n=8) requesting 3–5 times and 4% (n=7) more than 5 times.", 80)
 
 p_freq_repair <- plt_barplot(housing_dta, variable = repair_frequency, title_plot = title_plot)
 
