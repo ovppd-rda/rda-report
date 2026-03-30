@@ -1277,3 +1277,62 @@ ggsave(
 # display plot
 knitr::include_graphics("plot/serv_ameneties.jpeg")
 ```
+
+
+
+### Fairness and transparancy of housing policies {.unnumbered}
+
+- Nearly half of respondents agreed that current housing policies are fair and transparent (46%, n=72). A substantial portion neither agreed nor disagreed, reflecting uncertainty or mixed perceptions (35%, n=55).
+
+- A smaller group strongly agreed with the fairness and transparency of policies (13%, n=20). Only a few respondents expressed disagreement (6%, n=10).
+
+```{r}
+title_plot <- glue("Do you feel the current housing policies are fair and transparent? (n = {nrow(housing_dta)})")
+
+subtitle_text <- str_wrap("Most respondents view housing policies as fair and transparent, though many remain neutral, with fewer expressing strong agreement or disagreement.", 80)
+
+p_housing_policies_fair <- plt_barplot(housing_dta, housing_policies_fair, title_plot)
+
+## save plot
+ggsave(
+    plot = p_housing_policies_fair,
+    filename = "plot/housing_policies_fair.jpeg",
+    units = "in",
+    width = 10,
+    height = 4,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/housing_policies_fair.jpeg")
+```
+
+
+### VSU housing overall satisfaction {.unnumbered}
+
+- Over half of respondents reported being satisfied with VSU housing services (52%, n=81).
+
+- Nearly a third expressed neutrality, neither satisfied nor dissatisfied (30%, n=47).
+
+- A smaller group indicated they were very satisfied (15%, n=23). Only a few respondents reported dissatisfaction (3%, n=5).
+
+
+```{r}
+title_plot <- glue("How would you rate your overall satisfaction with\nVSU housing services?(n = {nrow(housing_dta)})")
+subtitle_text <- str_wrap("Most respondents are satisfied with housing services, with fewer expressing strong satisfaction or dissatisfaction, and a notable share remaining neutral.", 80)
+
+p_overall_sat <- plt_barplot(housing_dta, overall_satisfaction, title_plot)
+
+## save plot
+ggsave(
+    plot = p_overall_sat,
+    filename = "plot/overall_sat.jpeg",
+    units = "in",
+    width = 10,
+    height = 4,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/overall_sat.jpeg")
+```
