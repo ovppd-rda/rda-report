@@ -912,14 +912,14 @@ knitr::include_graphics("plot/noise_disturbance.jpeg")
 
 ### Frequency of repairs requested {.unnumbered}
 
--   Over half of respondents (52%, n=32) reported no repair requests in the past year,
+-   Over half of respondents (54%, n=84) reported no repair requests in the past year,
 
--   About one‑third (35%, n=22) requested repairs 1–2 times and Only 8% (n=5) reported 3–5 repair requests, and 5% (n=3) reported more than 5.
+-   About one‑third (37%, n=58) requested repairs 1–2 times and only 5% (n=8) reported 3–5 repair requests, and 4% (n=7) reported more than 5.
 
 ```{r}
 title_plot <- glue("Frequency of repairs requested (n = {nrow(housing_dta)})")
 
-subtitle_text <- str_wrap("Over half of respondents (54%, n=84) reported no repair requests in the past year, while 37% (n=58) requested repairs 1–2 times. Only a small share experienced more frequent issues, with 5% (n=8) requesting 3–5 times and 4% (n=7) more than 5 times.", 80)
+subtitle_text <- str_wrap("Most respondents did not request any repairs in the past year, while a considerable portion asked for minor repairs once or twice. Only a small share experienced more frequent issues, requiring multiple repair interventions.", 80)
 
 p_freq_repair <- plt_barplot(housing_dta, variable = repair_frequency, title_plot = title_plot)
 
@@ -937,11 +937,19 @@ ggsave(
 knitr::include_graphics("plot/freq_repair.jpeg")
 ```
 
+
 ### Satisfaction on the timeliness of repair services {.unnumbered}
+
+- Nearly half of respondents expressed a neutral stance toward the timeliness of repair services (45%, n=70).
+
+- A significant portion reported being satisfied (27%, n=43), while a smaller group were very satisfied (8%, n=12).
+
+- Dissatisfaction was noted by 11% (n=18), and 6% (n=10) reported being very dissatisfied. A small minority indicated the question was not applicable to them (3%, n=4).
 
 ```{r}
 title_plot <- glue("How satisfied are you with the timeliness of repair services provided? (n = {nrow(housing_dta)})")
-subtitle_text <- str_wrap("subtitle text", 80)
+
+subtitle_text <- str_wrap("Responses show mixed levels of satisfaction, with many remaining neutral, some expressing satisfaction, and fewer reporting dissatisfaction.", 80)
 
 p_sat_timeliness_repair <- plt_barplot(housing_dta, sat_timeliness_repair, title_plot)
 
@@ -959,12 +967,23 @@ ggsave(
 knitr::include_graphics("plot/sat_timeliness_repair.jpeg")
 ```
 
+
+
 ### Quality of repairs conducted {.unnumbered}
+
+- The largest share of respondents described repairs as good, noting that only minor issues remained (44%, n=56).
+
+- Nearly a quarter rated repairs as fair, suggesting that many fixes were only temporary (24%, n=30).
+
+- A smaller group considered repairs excellent with issues fully resolved (13%, n=17), while an equal share felt repairs were poor and unresolved (13%, n=16).
+
+- A small minority indicated the question was not applicable to them (6%, n=7).
+
 
 ```{r}
 title_plot <- glue("Perceived quality of repairs provided (n = {nrow(housing_dta)})")
 
-subtitle_text <- str_wrap("subtitle text", 70)
+subtitle_text <- str_wrap("Most respondents rated repairs as good, with some viewing them as fair or excellent, while a smaller share felt repairs were poor or not applicable.", 70)
 
 p_quality_repair <- plt_barplot(housing_dta, quality_repair, title_plot)
 
@@ -982,12 +1001,19 @@ ggsave(
 knitr::include_graphics("plot/quality_repair.jpeg")
 ```
 
+
+
 ### Satisfaction with maintenance {.unnumbered}
+
+- Most respondents consider the maintenance fee rates appropriate (72%, n=113). A notable portion expressed no opinion on the fee rates (21%, n=33).
+
+- A small group felt the rates were too high (6%, n=9). Only a very few respondents believed the rates were too low (1%, n=2).
+
 
 ```{r}
 title_plot <- glue("Satisfaction with maintenance fee rates (n = {nrow(housing_dta)})")
 
-subtitle_text <- str_wrap("subtitle text", 70)
+subtitle_text <- str_wrap("Most respondents consider the maintenance fee rates reasonable, while some expressed no opinion and only a few viewed them as either too high or too low.", 70)
 
 p_sat_maintenance_fee <- plt_barplot(housing_dta, sat_maintenance_fee, title_plot)
 
@@ -1005,12 +1031,20 @@ ggsave(
 knitr::include_graphics("plot/sat_maintenance_fee.jpeg")
 ```
 
+
+
 ### Reliability of utility services {.unnumbered}
+
+- The majority of respondents identified water supply as the most consistently reliable service. A significant share also recognized garbage collection as dependable.
+
+- While electricity was reported as reliable by many, though slightly less than water and garbage services. 
+
+- Overall data highlights strong confidence in the reliability of essential services, with water supply leading, and only a negligible portion expressing complete dissatisfaction.
 
 ```{r}
 title_plot <- glue("In terms of the utility services provided by the university,\nwhich services are consistently reliable? (n = {nrow(housing_dta)})")
 
-subtitle_text <- str_wrap("subtitle text", 70)
+subtitle_text <- str_wrap("Water supply is viewed as the most consistently reliable service, followed by garbage collection and electricity, with very few respondents indicating that none are dependable.", 70)
 
 serv_reliability_dta <- 
     housing_dta |> 
@@ -1038,11 +1072,17 @@ ggsave(
 knitr::include_graphics("plot/service_reliability.jpeg")
 ```
 
+
 ### Energy subsidy awareness {.unnumbered}
+
+- - Most respondents indicated they are aware of the electricity subsidy and its scheduled reduction and eventual removal (68%, n=107).
+
+- A significant share reported being unaware of the subsidy and its future changes (32%, n=50).
+
 
 ```{r}
 ## subtitle text
-subtitle_text <- str_wrap("", 80)
+subtitle_text <- str_wrap("A majority of respondents are aware of the electricity subsidy and its planned reduction, while a notable portion remain unaware of the upcoming changes.", 80)
 
 p_electric_subsidy <- 
     housing_dta |> 
@@ -1088,11 +1128,25 @@ ggsave(
 knitr::include_graphics("plot/electric_subsidy.jpeg")
 ```
 
+
+
 # Unit improvements and extensions {.unnumbered}
+
+- Over half of respondents reported making modifications or extensions to their housing units (54%, n=85).
+
+- Only a small share secured approval from the General Services Office (12%, n=19), while most indicated this was not applicable (78%, n=123).
+
+- A strong majority recognized that all improvements become university property upon turnover (91%, n=143).
+
+- Most improvements did not alter the basic design of the housing unit (85%, n=133).
+
+- Few respondents obtained a written permit before starting improvements (10%, n=16), while a larger group admitted not securing one (22%, n=35).
+
+- Overall trend, data shows active engagement in unit improvements, paired with high awareness of property rules, but weaker compliance with formal approval and permitting processes.
 
 ```{r}
 ## subtitle text
-subtitle_text <- str_wrap("", 80)
+subtitle_text <- str_wrap("Many residents reported making improvements to their housing units, with most acknowledging university ownership of modifications. However, securing permits and approvals was less consistently observed.", 80)
 
 p_housing_improv <- 
     housing_dta |> 
@@ -1121,6 +1175,7 @@ p_housing_improv <-
     geom_text(aes(label = pct_lab), position = position_fill(vjust = 0.2), hjust = -0, fontface = 'bold', size = 4, color = "white") +
     scale_x_continuous(labels = percent_format(), limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
     scale_fill_manual(values = c("#ed6a5a", "#243e36", "#064789")) +
+    guides(fill = guide_legend(reverse = TRUE)) +
     labs(
         subtitle = subtitle_text,
         title = "Unit improvements and extensions ",
@@ -1143,11 +1198,19 @@ ggsave(
 knitr::include_graphics("plot/housing_improv.jpeg")
 ```
 
+
+
 ### Condition of improvement {.unnumbered}
+
+- Nearly half of the improvements were rated as good, showing only minor wear and tear (48%, n=55). A quarter of respondents described their improvements as excellent, highlighting safe and well-kept conditions (25%, n=29).
+
+- A smaller share reported fair condition, indicating repairs are needed (14%, n=16). Only a few improvements were considered poor, unsafe, or deteriorating (5%, n=6).
+
+- A small portion of respondents indicated the question did not apply to them (8%, n=9).
 
 ```{r}
 title_plot <- glue("Condition of improvements (n = {nrow(housing_dta)})")
-subtitle_text <- str_wrap("subtitle text", 70)
+subtitle_text <- str_wrap("Most improvements are in good or excellent condition, with fewer requiring repairs or showing signs of deterioration.", 70)
 
 p_improve_condition <- plt_barplot(housing_dta, improvement_condition, title_plot)
 
@@ -1165,13 +1228,24 @@ ggsave(
 knitr::include_graphics("plot/improve_condition.jpeg")
 ```
 
+
 # Future needs and feedbacks
 
-### Services and amenities needs
+### Services and amenities needs {.unnumbered}
+
+- Over a third of respondents expressed a strong preference for free Internet/Wi-Fi (35%, n=90).
+
+- Recreational areas (19%, n=49) and garden/green spaces (19%, n=47) were equally sought after, highlighting interest in shared and natural environments.
+
+- Additional storage (11%, n=27) and laundry areas (7%, n=18) were requested by smaller groups, reflecting functional priorities.
+
+- Very few respondents mentioned kitchens (2%, n=4), fire extinguishers (1%, n=3), or gave no answer.
+
+- Only a small fraction indicated no desired amenities (combined ~5%, n≈13 across “None,” “none,” and “NONE”).
 
 ```{r}
 title_plot <- glue("Services and ameneties wished by occupants (n = {nrow(housing_dta)})")
-subtitle_text <- str_wrap("", 70)
+subtitle_text <- str_wrap("Free Internet/Wi-Fi is the most desired amenity, followed by recreational and green spaces, with fewer requests for storage, laundry, and other facilities.", 70)
 
 serv_ameneties_dta <- 
     housing_dta |> 
