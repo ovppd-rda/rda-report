@@ -1130,7 +1130,7 @@ knitr::include_graphics("plot/electric_subsidy.jpeg")
 
 
 
-# Unit improvements and extensions {.unnumbered}
+### Unit improvements and extensions {.unnumbered}
 
 - Over half of respondents reported making modifications or extensions to their housing units (54%, n=85).
 
