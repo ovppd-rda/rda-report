@@ -427,7 +427,8 @@ p_co_occupant <-
     str_detect(relationship_to_the_head, "no") ~ "none",
     TRUE ~ relationship_to_the_head
   )) |> 
-  plt_barplot(variable = relationship_to_the_head, title_plot)
+  plt_barplot(variable = relationship_to_the_head, title_plot) +
+  scale_x_continuous(labels = percent_format(), limits = c(0, 0.50), breaks = seq(0, 0.5, 0.10)) 
 
 ## save plot
 ggsave(
