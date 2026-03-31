@@ -599,8 +599,104 @@ knitr::include_graphics("plot/pets_owned.jpeg")
 
 ### Pet's status of vaccination
 
+- Vaccinations were very low from 2020 to 2024, with only 1–3 cases recorded each year. A dramatic increase occurred in 2025, with 52 vaccinations — the highest across all years. Currently, 22 vaccination were reported in 2026.
+
+
 ```{r}
-co
+title_plot <- glue("Yearly pet vaccination (n = {nrow(housing_dta)})")
+subtitle_text <- str_wrap("Pet vaccinations remained low in earlier years, spiked sharply in 2025.", 80)
+
+vacc_date_dta <- 
+  co_occupant_dta |> 
+  select(date_of_last_vaccination) |> 
+  mutate(vacc_date = str_extract(date_of_last_vaccination, "\\d+")) |> 
+  mutate(vacc_date = as_date(as.numeric(vacc_date), origin = "1899-12-30")) |> 
+  mutate(year_month = floor_date(vacc_date, "year")) |> 
+  mutate(year_month = case_when(
+      year(year_month) == 1900 ~ as.Date("2026-01-01"),
+      year(year_month) == 1905 ~ as.Date("2025-01-01"),
+      TRUE ~ year_month)) |> 
+  group_by(year_month) |> 
+  summarise(count = n(), .groups = "drop") |> 
+  na.omit()
+
+
+p_pet_vaccination <- 
+    ggplot(vacc_date_dta, aes(x = year_month, y = count)) +
+    geom_line(color = "steelblue", linewidth = 1) +
+    geom_point(color = "darkred", size = 2) +
+    geom_text(aes(label = count), vjust = -1.3, fontface = "bold", size = 4) +
+    scale_y_continuous(limits = c(0, 60), breaks = seq(0, 60, 10)) +
+    scale_x_date(
+    breaks = seq(as.Date("2020-01-01"), as.Date("2027-01-01"), by ="1 year"),
+    labels = date_format("%Y"),
+    limits = c(as.Date("2020-01-01"), as.Date("2027-01-01"))
+    ) +
+    labs(
+    title = title_plot,
+    subtitle = subtitle_text,
+    x = NULL,
+    y = NULL
+    ) +
+    custom_theme()
+
+## save plot
+ggsave(
+    plot = p_pet_vaccination,
+    filename = "plot/pet_vaccination.jpeg",
+    units = "in",
+    width = 8,
+    height = 4,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/pet_vaccination.jpeg")
+```
+
+### Pet's living arrangement
+
+- Nearly half of the pets are kept indoors (46%, n=58) while about one-third are kept in cages (32%, n=40), reflecting controlled environments for safety or management.
+
+- A smaller portion are leashed (17%, n=22), very few are kept in fenced areas (3%, n=4). Only 2% (n=2) of pets were reported as stray, suggesting limited cases of unconfined animals.
+
+
+
+```{r}
+
+title_plot <- glue("Living arrangements of Pets (n = {nrow(housing_dta)})")
+
+subtitle_text <- str_wrap("Most pets are kept indoors or caged, with fewer leashed, fenced, or stray.", 70)
+
+p_pet_condition <- 
+  co_occupant_dta |> 
+  select(pet_conditions) |> 
+  mutate(pet_stat = str_split(pet_conditions, "/")) |> 
+  unnest(cols = c(pet_stat)) |> 
+  na.omit() |> 
+  mutate(pet_stat = str_to_lower(pet_stat)) |> 
+  mutate(pet_condition = case_when(
+    str_detect(pet_stat, "house|indoor|domestic") ~ "Indoor",
+    str_detect(pet_stat, "cage|caged") ~ "Caged",
+    str_detect(pet_stat, "leased|leash") ~ "Leashed",
+    str_detect(pet_stat, "fence|perimeter|pen|pond|gate") ~ "Fenced",
+    str_detect(pet_stat, "stray|outside") ~ "Stray",
+    TRUE ~ pet_stat
+  )) |> 
+  plt_barplot(pet_condition, title_plot)
+
+## save plot
+ggsave(
+    plot = p_pet_condition,
+    filename = "plot/pet_condition.jpeg",
+    units = "in",
+    width = 8,
+    height = 4,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/pet_condition.jpeg")
 ```
 
 # Conditions of facility
