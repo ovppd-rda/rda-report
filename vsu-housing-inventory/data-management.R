@@ -65,23 +65,3 @@ co_occupant_dta <- read_excel("data/20260330-co-occupant-attachment.xlsx") |>
   clean_names() |> 
   select(-x21)
 
-
-co_occupant_dta |> 
-  glimpse()
-
-
-co_occupant_dta |> 
-  count(pet_conditions) |> 
-  print(n = 40)
-  
-  
-
-co_occupant_dta |> 
-  select(pet_conditions) |> 
-  mutate(pet_stat = str_split(pet_conditions, "/")) |> 
-  unnest(cols = c(pet_stat)) |> 
-  na.omit() |> 
-  unnest_tokens(word, pet_stat) |> 
-  anti_join(stop_words) |> 
-  count(word, sort = TRUE) |> 
-  print(n = 35)
