@@ -517,7 +517,86 @@ ggsave(
 knitr::include_graphics("plot/vehicle_garage.jpeg")
 ```
 
+
 ### Number of pets owned {.unnumbered}
+
+- Nearly three-fourths of respondents reported owning dogs (74%, count: 212), with an average of 3 per household and a wide range (1–17).
+
+- About 15% of respondents own cats (count: 42), averaging nearly 3 per household, with some owning up to 12.
+
+- Though only 10% of respondents own fish (count: 30), each household consistently reported 30 fish, showing high volume but limited distribution.
+
+- Very few respondents own birds (0.7%, count: 2), with ownership limited to exactly 2 per household. Only one respondent reported owning chickens (0.35%, count: 1).
+
+
+::: {.callout-warning}
+## For verification:
+The reported number of dogs appears unusually high. Some respondents indicated owning up to 17 dogs. This needs verification to ensure it is not a typographical error.
+:::
+
+
+
+```{r}
+title_plot <- glue("Type and number of pets owned (n = {nrow(housing_dta)})")
+
+subtitle_text <- str_wrap("Dogs are the most commonly owned pets, followed by cats and fish, while birds and chickens are rarely reported.", 70)
+
+
+pets_owned_dta <- 
+  co_occupant_dta |> 
+  select(type_of_pet, total_number_of_pets_owned) |> 
+  mutate(pet_type = case_when(
+    str_detect(type_of_pet, "Cat|Kitten") ~ "Cats",
+    str_detect(type_of_pet, "Dog|Canine|Puppy") ~ "Dogs",
+    str_detect(type_of_pet, "Chick|Rooster") ~ "Chickens",
+    str_detect(type_of_pet, "Bird") ~ "Birds",
+    str_detect(type_of_pet, "Fish") ~ "Fish",
+    TRUE ~ type_of_pet
+  )) |> 
+  mutate(no_pets = str_extract(total_number_of_pets_owned, "\\d+")) |> 
+  mutate(no_pets = as.integer(no_pets)) |> 
+  select(pet_type, no_pets) |> 
+  na.omit() |> 
+  group_by(pet_type) |> 
+  summarise(
+    count = sum(no_pets),
+    avg = mean(no_pets, na.rm = TRUE),
+    min = min(no_pets),
+    max = max(no_pets)
+  ) |> 
+  mutate(pct = count/sum(count)) |> 
+  mutate(pct_lab = str_c(round(pct * 100, 2), "% ", "(count: ", count, "; avg: ", round(avg, 0), "; min-max [", min, "-", max, "])")) |> 
+  mutate(pet_type = fct_reorder(pet_type, pct))
+
+p_pets_owned <- 
+  pets_owned_dta |> 
+  ggplot(aes(pct, pet_type)) +
+    geom_col(width = 0.6) +
+    geom_text(aes(label = pct_lab), hjust = -0.05, fontface = "bold", size = 4) +
+    scale_x_continuous(labels = percent_format(), limits = c(0, 1.50), breaks = seq(0, 1, 0.25)) +
+    coord_cartesian(expand = TRUE, clip = "off") +
+    labs(
+        title = title_plot,
+        subtitle = subtitle_text,
+        x = NULL,
+        y = NULL
+    ) +
+    custom_theme()
+
+
+## save plot
+ggsave(
+    plot = p_pets_owned,
+    filename = "plot/pets_owned.jpeg",
+    units = "in",
+    width = 10,
+    height = 5,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/pets_owned.jpeg")
+```
 
 # Conditions of facility
 
