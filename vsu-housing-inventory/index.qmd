@@ -534,8 +534,6 @@ knitr::include_graphics("plot/vehicle_garage.jpeg")
 The reported number of dogs appears unusually high. Some respondents indicated owning up to 17 dogs. This needs verification to ensure it is not a typographical error.
 :::
 
-
-
 ```{r}
 title_plot <- glue("Type and number of pets owned (n = {nrow(housing_dta)})")
 
@@ -596,6 +594,13 @@ ggsave(
   
 # display plot
 knitr::include_graphics("plot/pets_owned.jpeg")
+```
+
+
+### Pet's status of vaccination
+
+```{r}
+co
 ```
 
 # Conditions of facility
