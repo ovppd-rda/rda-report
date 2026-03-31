@@ -66,9 +66,7 @@ co_occupant_dta <- read_excel("data/20260330-co-occupant-attachment.xlsx") |>
   select(-x21)
 
 
-co_occupant_dta |> 
-  mutate(relationship_to_the_head = str_to_lower(relationship_to_the_head)) |>
-  count(relationship_to_the_head, sort = T) |> 
-  na.omit() |> 
-  View()
+
+
+
 

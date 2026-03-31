@@ -394,7 +394,127 @@ knitr::include_graphics("plot/retirement.jpeg")
 
 ### Number of co-occupants {.unnumbered}
 
+- Daughters (23%, n=96) and sons (22%, n=90) are the most common co-occupants, together accounting for nearly half of all responses.
+
+- Wives (9%, n=37), husbands (6%, n=25), and those identified simply as “spouse” (5%, n=22) form a notable but smaller group.
+
+- Co-heads (4%, n=18), children (4%, n=18), nieces (4%, n=17), and various extended relatives (e.g., brothers, nephews, cousins) each represent small shares (2–4%).
+
+- Categories such as sister-in-law, sister, mother-in-law, daughter-in-law, live-in partner, granddaughter, and others each account for only 1–2% of responses. Father, uncle, relative, and “none” were reported by only 2 respondents each.
+
+```{r}
+
+title_plot <- glue("Co-occupant relationship to unit owner (n = {nrow(housing_dta)})")
+
+subtitle_text <- str_wrap("Daughters and sons make up the largest share of co-occupants, while spouses and extended relatives represent smaller proportions.", 70)
+
+
+p_co_occupant <- 
+    co_occupant_dta |> 
+    select(relationship_to_the_head) |> 
+    mutate(relationship_to_the_head = str_to_lower(relationship_to_the_head)) |>
+    na.omit() |> 
+    mutate(relationship_to_the_head = case_when(
+    str_detect(relationship_to_the_head, "adopted sister") ~ "sister",
+    str_detect(relationship_to_the_head, "stepdaughter") ~ "daughter",
+    str_detect(relationship_to_the_head, "niece") ~ "niece",
+    str_detect(relationship_to_the_head, "son") ~ "son",
+    str_detect(relationship_to_the_head, "officemate|colleague|friend|employer|housemate") ~ "colleagues",
+    str_detect(relationship_to_the_head, "head") ~ "co-head",
+    str_detect(relationship_to_the_head, "scholar|student") ~ "working/scholar student",
+    str_detect(relationship_to_the_head, "sister-in") ~ "sister-in-law",
+    str_detect(relationship_to_the_head, "sibling") ~ "child",
+    str_detect(relationship_to_the_head, "no") ~ "none",
+    TRUE ~ relationship_to_the_head
+  )) |> 
+  plt_barplot(variable = relationship_to_the_head, title_plot)
+
+## save plot
+ggsave(
+    plot = p_co_occupant,
+    filename = "plot/co_occupant.jpeg",
+    units = "in",
+    width = 9,
+    height = 8,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/co_occupant.jpeg")
+```
+
 ### Number of vehicles owned {.unnumbered}
+
+- The majority of respondents reported having a garage (80%), and within this group motorcycles are the most common vehicle (36%, n=96).
+
+- Cars (14%, n=36) and SUVs (9%, n=25) are more frequently owned by those with garages, alongside smaller shares of vans/MPVs and pick-ups (both 4%).
+
+- Trucks (2%, n=5), bicycles (2%, n=5), and tricycles (0%, n=1) were reported in smaller numbers among garage owners.
+
+- Motorcycles remain the leading vehicle type (9%, n=25), followed by cars (5%, n=12) and trucks (3%, n=7).
+
+- SUVs (1%, n=2), tricycles (1%, n=3), and single cases of vans, pick-ups, and bicycles highlight limited diversity in vehicle types among households without garages.
+
+```{r}
+
+title_plot <- glue("Vehicle owned and garage availability (n = {nrow(housing_dta)})")
+
+subtitle_text <- str_wrap("Motorcycles are the most common vehicles owned, especially among households with garages, while cars and trucks appear more frequently among those without garages.", 70)
+
+vehicles_garage_dta <- 
+  co_occupant_dta |> 
+  select(with_garage_y_n, vehicle_type) |> 
+  mutate(with_garage_y_n = str_to_lower(with_garage_y_n)) |> 
+  mutate(with_garage = if_else(with_garage_y_n == "yes", "with garage (80%)", "without garage (20%)")) |> 
+  na.omit() |>
+  mutate(
+    vehicle_category = case_when(
+      str_detect(vehicle_type, regex("motor|scooter|2 wheel|burgman|click", ignore_case = TRUE)) ~ "Motorcycle",
+      str_detect(vehicle_type, regex("3 wheel|tricycle|pedicab", ignore_case = TRUE)) ~ "Tricycle",
+      str_detect(vehicle_type, regex("sedan|hatchback|car|ecosport|innova|alto|surf|mux|vios|ranger|wigo|eon", ignore_case = TRUE)) ~ "Car",
+      str_detect(vehicle_type, regex("suv|crossover", ignore_case = TRUE)) ~ "SUV",
+      str_detect(vehicle_type, regex("van|mpv|urvan|grandia", ignore_case = TRUE)) ~ "Van/MPV",
+      str_detect(vehicle_type, regex("pick|hilux|strada|frontier", ignore_case = TRUE)) ~ "Pick-up",
+      str_detect(vehicle_type, regex("truck|cab", ignore_case = TRUE)) ~ "Truck",
+      str_detect(vehicle_type, regex("bicycle", ignore_case = TRUE)) ~ "Bicycle",
+      TRUE ~ "Other"
+    )
+  ) |>
+  count(with_garage, vehicle_category, sort = TRUE) |> 
+  n_pct() |> 
+  mutate(vehicle_category = reorder_within(vehicle_category, pct, with_garage))
+
+p_vehicle_garage <- 
+  vehicles_garage_dta |> 
+  ggplot(aes(pct, vehicle_category, fill = with_garage)) +
+  facet_wrap(~ with_garage, scales = "free", ncol = 1) +
+  geom_col(width = 0.7, show.legend = F) +
+  geom_text(aes(label = pct_lab), hjust = -0.1, fontface = "bold", size = 4) +
+  scale_x_continuous(labels = percent_format(), limits = c(0, 0.75), breaks = seq(0, 0.75, 0.25)) +
+  scale_y_reordered() +
+  scale_fill_manual(values = c("#00bfc4", "#f8766d")) +
+  coord_cartesian(expand = TRUE, clip = "off") +
+  labs(
+        title = title_plot,
+        subtitle = subtitle_text,
+        x = NULL,
+        y = NULL
+    ) +
+  custom_theme()
+
+## save plot
+ggsave(
+    plot = p_vehicle_garage,
+    filename = "plot/vehicle_garage.jpeg",
+    units = "in",
+    width = 8,
+    height = 8,
+    dpi = 300
+)
+  
+# display plot
+knitr::include_graphics("plot/vehicle_garage.jpeg")
+```
 
 ### Number of pets owned {.unnumbered}
 
