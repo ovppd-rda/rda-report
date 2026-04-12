@@ -1,6 +1,6 @@
 # VSU RDA Reports
 
-This repository hosts institutional reports prepared under the Office of the Vice President for Planning and Development – Research, Development, and Assessment (OVPPD-RDA). It provides accessible documentation and survey outputs that support compliance monitoring, risk management, and housing policy development at Visayas State University.
+This repository hosts institutional reports prepared under the Office of the Vice President for Planning and Development – Research, and Data Analysis (OVPPD-RDA). It provides accessible documentation and survey outputs that support compliance monitoring, risk management, and policy development at Visayas State University.
 
 ## 📊 Available Reports
 
@@ -15,6 +15,3 @@ Repository and published reports:
 [https://github.com/ovppd-rda/rda-report](https://github.com/ovppd-rda/rda-report)
 
 ---
-
-### Purpose
-This repository ensures transparency and accessibility of institutional assessments. It serves as a reference for stakeholders, researchers, and planners engaged in strengthening VSU’s resilience and student welfare.
