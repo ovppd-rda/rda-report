@@ -1,0 +1,135 @@
+---
+title: "2026 Risk Assessment"
+format: 
+  dashboard:
+    orientation: columns
+---
+
+```{r}
+#| label: load-packages
+library(tidyverse)
+library(readxl)
+library(janitor)
+library(scales)
+library(lessR)
+library(plotly)
+
+options(plotly_suggest = FALSE)
+
+```
+
+```{r}
+#| label: data-management
+## setting workind environment
+setwd(here::here("risk-assessment"))
+
+## load data
+risk_dta <- read_excel("data/risk-assessment.xlsx") |> 
+    clean_names()
+```
+
+
+## Column - Risk category and rating
+
+### Row - Risk breakdown {height="40%"}
+
+```{r}
+#| label: risk rating all
+#| title: Risk rating breakdown
+#| warning: false
+#| message: false
+
+risk_dta |> 
+  count(risk_rating) |> 
+  mutate(pct = n / sum(n),
+         pct_lab = str_c(risk_rating, ": ", round(pct * 100, 2), "%"),
+         hover_lab = str_c("Category: ", risk_rating,
+                           "<br>Count: ", n,
+                           "<br>Share: ", round(pct * 100, 2), "%")) |>
+  plot_ly(labels = ~risk_rating, values = ~pct, type = "pie",
+          textinfo = "label+percent",      
+          textposition = "outside",
+          hoverinfo = "text",              
+          hovertext = ~hover_lab,          
+          marker = list(colors = c("#06d6a0", "#f7f96bee", "#fa9324", "#d62828")),
+          hole = 0.5) |>
+  layout(title = NULL,
+         showlegend = FALSE)
+
+```
+
+
+### Row - Risk category {height="60%"}
+
+```{r}
+#| label: risk category
+#| title: Risk category by risk rating
+
+P_risk_category <- 
+    risk_dta |> 
+    count(risk_category, risk_rating) |> 
+    mutate(risk_rating = factor(risk_rating, levels = c("Low", "Tolerable", "High", "Very High"))) |>
+    group_by(risk_category) |> 
+    mutate(pct = n / sum(n)) |> 
+    ungroup() |> 
+    mutate(risk_rating = fct_rev(risk_rating)) |> 
+    mutate(hover_lab = paste0("Category: ", risk_category,
+                            "\nRating: ", risk_rating,
+                            "\nCount: ", n,
+                            "\nShare: ", round(pct*100, 2), "%")) |> 
+    ggplot(aes(pct, risk_category, fill = risk_rating, text = hover_lab)) +
+    geom_col(width = 0.7) +
+    scale_x_continuous(labels = percent_format()) +
+    scale_fill_manual(values = c("#d62828", "#fa9324", "#f7f96bee", "#06d6a0")) +
+    guides(fill = guide_legend(reverse = TRUE)) +
+    labs(
+        y = NULL,
+        x = NULL,
+        fill = NULL
+    ) +
+    theme_light() +
+    theme(
+        axis.text = element_text(size = 10),
+        legend.position = "bottom",
+        legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10)
+    )
+
+ggplotly(P_risk_category, tooltip = "text")
+```
+
+
+## Column - Risk identified across department
+
+### Row - Risk identified {height="70%"}
+
+```{r}
+#| label: risk identified
+#| title: Risk identifed across department
+#| fig-height: 10
+
+risk_dta |> 
+    count(department, risk_rating) |> 
+    mutate(risk_rating = factor(risk_rating, levels = c("Low", "Tolerable", "High", "Very High"))) |>
+    group_by(department) |> 
+    mutate(pct = n / sum(n)) |> 
+    ungroup() |> 
+    mutate(risk_rating = fct_rev(risk_rating)) |> 
+    ggplot(aes(pct, department, fill = risk_rating)) +
+    geom_col(width = 0.7) +
+    scale_x_continuous(labels = percent_format()) +
+    scale_fill_manual(values = c("#d62828", "#fa9324", "#f7f96bee", "#06d6a0")) +
+    guides(fill = guide_legend(reverse = TRUE)) +
+    labs(
+        y = NULL,
+        x = "Percentage proportion",
+        fill = "Rating"
+    ) +
+    theme_light() +
+    theme(
+        axis.text = element_text(size = 14),
+        legend.position = "bottom",
+        legend.text = element_text(size = 14),
+        legend.title = element_text(size = 14)
+    )
+```
