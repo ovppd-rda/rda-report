@@ -1,5 +1,5 @@
 ---
-title: "2026 Risk Assessment"
+title: "VSU Risk Assessment 2026"
 format: 
   dashboard:
     orientation: columns
