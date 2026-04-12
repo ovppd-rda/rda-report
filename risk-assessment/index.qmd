@@ -32,7 +32,7 @@ risk_dta <- read_excel("data/risk-assessment.xlsx") |>
 ```
 
 
-## Column - Risk identified across department {width="55%"}
+## Column - Risk identified across department {width="45%"}
 
 ### Value boxed {height="25%"}
 
@@ -80,9 +80,7 @@ category_most_risk_dta <-
 ::: {.valuebox icon="pc-display-horizontal" color="info"}
 **Top risk**
 
-`{r} paste(category_most_risk_dta, "\n \n")`
-
-
+`{r} paste(category_most_risk_dta)`
 :::
 
 
@@ -93,32 +91,40 @@ category_most_risk_dta <-
 ```{r}
 #| label: risk identified
 #| title: Departmental Risk Distribution 
-#| fig-height: 10
+#| fig-width: 5
 
-risk_dta |> 
-    count(department, risk_rating) |> 
-    mutate(risk_rating = factor(risk_rating, levels = c("Low", "Tolerable", "High", "Very High"))) |>
-    group_by(department) |> 
-    mutate(pct = n / sum(n)) |> 
-    ungroup() |> 
-    mutate(risk_rating = fct_rev(risk_rating)) |> 
-    ggplot(aes(pct, department, fill = risk_rating)) +
-    geom_col(width = 0.7) +
-    scale_x_continuous(labels = percent_format()) +
-    scale_fill_manual(values = c("#d62828", "#fa9324", "#f7f96bee", "#06d6a0")) +
-    guides(fill = guide_legend(reverse = TRUE)) +
-    labs(
-        y = NULL,
-        x = "Percentage proportion",
-        fill = "Rating"
-    ) +
-    theme_light() +
-    theme(
-        axis.text = element_text(size = 14),
-        legend.position = "bottom",
-        legend.text = element_text(size = 14),
-        legend.title = element_text(size = 14)
-    )
+p <- risk_dta |> 
+  count(department, risk_rating) |> 
+  mutate(risk_rating = factor(risk_rating, 
+                              levels = c("Low", "Tolerable", "High", "Very High"))) |>
+  group_by(department) |> 
+  mutate(pct = n / sum(n)) |> 
+  ungroup() |> 
+  mutate(risk_rating = forcats::fct_rev(risk_rating)) |>
+  # build custom hover label
+  mutate(hover_lab = paste0("Department: ", department,
+                            "\nRating: ", risk_rating,
+                            "\nCount: ", n,
+                            "\nPercent: ", round(pct*100, 2), "%")) |>
+  ggplot(aes(pct, department, fill = risk_rating, text = hover_lab)) +
+  geom_col(width = 0.7) +
+  scale_x_continuous(labels = scales::percent_format()) +
+  scale_fill_manual(values = c("#d62828", "#fa9324", "#f7f96bee", "#06d6a0")) +
+  guides(fill = guide_legend(reverse = TRUE)) +
+  labs(
+    y = NULL,
+    x = NULL,
+    fill = NULL
+  ) +
+  theme_light() +
+  theme(
+    axis.text = element_text(size = 9),
+    legend.position = "bottom",
+    legend.text = element_text(size = 11),
+    legend.title = element_text(size = 11)
+  )
+
+ggplotly(p, tooltip = "text")
 ```
 
 
@@ -126,9 +132,9 @@ risk_dta |>
 
 
 
-## Columns - Risk category and rating {width="45%"}
+## Columns - Risk category and rating {width="55%"}
 
-### Row - Risk breakdown {height="40%"}
+### Row - Risk breakdown {height="50%"}
 
 ```{r}
 #| label: risk rating all
@@ -142,7 +148,7 @@ risk_dta |>
          pct_lab = str_c(risk_rating, ": ", round(pct * 100, 2), "%"),
          hover_lab = str_c("Category: ", risk_rating,
                            "<br>Count: ", n,
-                           "<br>Share: ", round(pct * 100, 2), "%")) |>
+                           "<br>Percent: ", round(pct * 100, 2), "%")) |>
   plot_ly(labels = ~risk_rating, values = ~pct, type = "pie",
           textinfo = "label+percent",      
           textposition = "outside",
@@ -156,7 +162,7 @@ risk_dta |>
 ```
 
 
-### Row - Risk category {height="60%"}
+### Row - Risk category {height="50%"}
 
 ```{r}
 #| label: risk category
@@ -173,7 +179,7 @@ P_risk_category <-
     mutate(hover_lab = paste0("Category: ", risk_category,
                             "\nRating: ", risk_rating,
                             "\nCount: ", n,
-                            "\nShare: ", round(pct*100, 2), "%")) |> 
+                            "\nPercent: ", round(pct*100, 2), "%")) |> 
     ggplot(aes(pct, risk_category, fill = risk_rating, text = hover_lab)) +
     geom_col(width = 0.7) +
     scale_x_continuous(labels = percent_format()) +
