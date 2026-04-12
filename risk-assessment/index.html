@@ -38,9 +38,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="index_files/libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="index_files/libs/bootstrap/bootstrap-6a298fde403041579a69b2204f21ed52.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="index_files/libs/bootstrap/bootstrap-dark-6a298fde403041579a69b2204f21ed52.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
-<link href="index_files/libs/bootstrap/bootstrap-6a298fde403041579a69b2204f21ed52.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="index_files/libs/bootstrap/bootstrap-7d8869365d9a7f9e6e4229a10a8b948e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="index_files/libs/bootstrap/bootstrap-dark-6c608cd20ca0820070645877b985798f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="index_files/libs/bootstrap/bootstrap-7d8869365d9a7f9e6e4229a10a8b948e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script src="index_files/libs/quarto-dashboard/quarto-dashboard.js"></script>
 <script src="index_files/libs/quarto-dashboard/stickythead.js"></script>
 
@@ -71,7 +71,169 @@ ul.task-list li input[type="checkbox"] {
 
 </head>
 
-<body class="quarto-dashboard dashboard-fill fullcontent quarto-light">
+<body class="quarto-dashboard dashboard-fill fullcontent quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
 
 <header id="quarto-dashboard-header">
 <nav class="navbar navbar-expand-md slim" data-bs-theme="dark">
@@ -95,57 +257,110 @@ ul.task-list li input[type="checkbox"] {
 </header>
 <div class="page-layout-custom quarto-dashboard-content bslib-gap-spacing html-fill-container bslib-page-fill">  
 
-<div class="bslib-grid-item html-fill-item bslib-grid" data-layout="fill" style="display: grid; grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr);
+
+<div class="bslib-grid-item html-fill-item bslib-grid" data-layout="fill" style="display: grid; grid-template-columns: minmax(3em, 55fr) minmax(3em, 45fr);
 grid-auto-rows: minmax(0, 1fr);">
-<div class="bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 40fr) minmax(3em, 60fr); grid-auto-columns: minmax(0, 1fr);">
-<div class="bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+<div class="bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 25fr) minmax(3em, 75fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr);
 grid-auto-rows: minmax(0, 1fr);">
-<div class="card cell bslib-card html-fill-container" data-title="Risk rating breakdown" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
-<div class="card-header"><div class="card-title"><span style="display: inline">
-Risk rating breakdown
-</span></div></div>
+<div class="card valuebox bslib-card html-fill-container bslib-value-box bg-danger showcase-left-center" data-bslib-card-init="" data-require-bs-caller="card()">
 <div class="card-body html-fill-item html-fill-container">
-<div class="cell-output-display html-fill-item html-fill-container">
-<div class="plotly html-widget html-fill-item html-fill-container" id="htmlwidget-60fa2ac0feabba278145" style="width:100%;height:406px;"></div>
-<script type="application/json" data-for="htmlwidget-60fa2ac0feabba278145">{"x":{"visdat":{"3cb460612237":["function () ","plotlyVisDat"]},"cur_data":"3cb460612237","attrs":{"3cb460612237":{"labels":{},"values":{},"textinfo":"label+percent","textposition":"outside","hoverinfo":"text","hovertext":{},"marker":{"colors":["#06d6a0","#f7f96bee","#fa9324","#d62828"]},"hole":0.5,"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"pie"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"showlegend":false,"hovermode":"closest"},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"labels":["High","Low","Tolerable","Very High"],"values":[0.29203539823008851,0.23893805309734514,0.44247787610619471,0.026548672566371681],"textinfo":"label+percent","textposition":["outside","outside","outside","outside"],"hoverinfo":["text","text","text","text"],"hovertext":["Category: High<br>Count: 33<br>Share: 29.2%","Category: Low<br>Count: 27<br>Share: 23.89%","Category: Tolerable<br>Count: 50<br>Share: 44.25%","Category: Very High<br>Count: 3<br>Share: 2.65%"],"marker":{"color":"rgba(31,119,180,1)","colors":["#06d6a0","#f7f96bee","#fa9324","#d62828"],"line":{"color":"rgba(255,255,255,1)"}},"hole":0.5,"type":"pie","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-showcase html-fill-item html-fill-container">
+
+<i class="bi bi-search"></i></div>
+<div class="value-box-area">
+<p class="value-box-title">
+<strong>Total risk identified</strong>
+</p>
+<p class="value-box-value">
+113
+</p>
 </div>
 </div>
-<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
-    <template>Expand</template>
-    <span class="bslib-full-screen-enter badge rounded-pill">
-        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
-    </span>
-</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
 </div>
-<div class="bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
-grid-auto-rows: minmax(0, 1fr);">
-<div class="card cell bslib-card html-fill-container" data-title="Risk category by risk rating" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
-<div class="card-header"><div class="card-title"><span style="display: inline">
-Risk category by risk rating
-</span></div></div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox bslib-card html-fill-container bslib-value-box bg-warning showcase-left-center" data-bslib-card-init="" data-require-bs-caller="card()">
 <div class="card-body html-fill-item html-fill-container">
-<div class="cell-output-display html-fill-item html-fill-container">
-<div class="plotly html-widget html-fill-item html-fill-container" id="htmlwidget-3eb815574b11ed7013ad" style="width:100%;height:406px;"></div>
-<script type="application/json" data-for="htmlwidget-3eb815574b11ed7013ad">{"x":{"data":[{"orientation":"v","width":[0.05555555555555558,0.125,0.021739130434782594],"base":[0.65000000000000002,4.6500000000000004,6.6500000000000004],"x":[0.97222222222222221,0.9375,0.98913043478260865],"y":[0.70000000000000007,0.69999999999999929,0.69999999999999929],"text":["Category: Compliance/ Regulatory Risk<br />Rating: Very High<br />Count: 1<br />Share: 5.56%","Category: Information/Cybersecurity Risk<br />Rating: Very High<br />Count: 1<br />Share: 12.5%","Category: Process and Procedure<br />Rating: Very High<br />Count: 1<br />Share: 2.17%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(214,40,40,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Very High","legendgroup":"Very High","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.5,0.44444444444444442,1,0.33333333333333337,0.375,0.08333333333333337,0.15217391304347827,0.5,0.44444444444444442],"base":[0.65000000000000002,1.6499999999999999,2.6499999999999999,3.6499999999999999,4.6500000000000004,5.6500000000000004,6.6500000000000004,7.6500000000000004,8.6500000000000004],"x":[0.69444444444444442,0.77777777777777779,0.5,0.83333333333333326,0.6875,0.95833333333333326,0.90217391304347827,0.75,0.77777777777777779],"y":[0.70000000000000007,0.70000000000000018,0.70000000000000018,0.69999999999999973,0.69999999999999929,0.69999999999999929,0.69999999999999929,0.69999999999999929,0.69999999999999929],"text":["Category: Compliance/ Regulatory Risk<br />Rating: High<br />Count: 9<br />Share: 50%","Category: Environmental/Natural Hazards<br />Rating: High<br />Count: 4<br />Share: 44.44%","Category: Facilities<br />Rating: High<br />Count: 1<br />Share: 100%","Category: Financial Risk<br />Rating: High<br />Count: 2<br />Share: 33.33%","Category: Information/Cybersecurity Risk<br />Rating: High<br />Count: 3<br />Share: 37.5%","Category: Manpower or Personnel<br />Rating: High<br />Count: 1<br />Share: 8.33%","Category: Process and Procedure<br />Rating: High<br />Count: 7<br />Share: 15.22%","Category: Security and Safety Risks<br />Rating: High<br />Count: 2<br />Share: 50%","Category: Strategic Risk<br />Rating: High<br />Count: 4<br />Share: 44.44%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(250,147,36,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"High","legendgroup":"High","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.38888888888888884,0.55555555555555558,0.66666666666666663,0.25,0.66666666666666663,0.39130434782608697,0.25,0.55555555555555558],"base":[0.65000000000000002,1.6499999999999999,3.6499999999999999,4.6500000000000004,5.6500000000000004,6.6500000000000004,7.6500000000000004,8.6500000000000004],"x":[0.25,0.27777777777777779,0.33333333333333331,0.375,0.58333333333333326,0.63043478260869568,0.375,0.27777777777777779],"y":[0.70000000000000007,0.70000000000000018,0.69999999999999973,0.69999999999999929,0.69999999999999929,0.69999999999999929,0.69999999999999929,0.69999999999999929],"text":["Category: Compliance/ Regulatory Risk<br />Rating: Tolerable<br />Count: 7<br />Share: 38.89%","Category: Environmental/Natural Hazards<br />Rating: Tolerable<br />Count: 5<br />Share: 55.56%","Category: Financial Risk<br />Rating: Tolerable<br />Count: 4<br />Share: 66.67%","Category: Information/Cybersecurity Risk<br />Rating: Tolerable<br />Count: 2<br />Share: 25%","Category: Manpower or Personnel<br />Rating: Tolerable<br />Count: 8<br />Share: 66.67%","Category: Process and Procedure<br />Rating: Tolerable<br />Count: 18<br />Share: 39.13%","Category: Security and Safety Risks<br />Rating: Tolerable<br />Count: 1<br />Share: 25%","Category: Strategic Risk<br />Rating: Tolerable<br />Count: 5<br />Share: 55.56%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(247,249,107,0.9294)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Tolerable","legendgroup":"Tolerable","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.055555555555555552,0.25,0.25,0.43478260869565216,0.25],"base":[0.65000000000000002,4.6500000000000004,5.6500000000000004,6.6500000000000004,7.6500000000000004],"x":[0.027777777777777776,0.125,0.125,0.21739130434782608,0.125],"y":[0.70000000000000007,0.69999999999999929,0.69999999999999929,0.69999999999999929,0.69999999999999929],"text":["Category: Compliance/ Regulatory Risk<br />Rating: Low<br />Count: 1<br />Share: 5.56%","Category: Information/Cybersecurity Risk<br />Rating: Low<br />Count: 2<br />Share: 25%","Category: Manpower or Personnel<br />Rating: Low<br />Count: 3<br />Share: 25%","Category: Process and Procedure<br />Rating: Low<br />Count: 20<br />Share: 43.48%","Category: Security and Safety Risks<br />Rating: Low<br />Count: 1<br />Share: 25%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(6,214,160,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Low","legendgroup":"Low","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":23.305936073059364,"r":7.3059360730593621,"b":24.242424242424242,"l":210.21170610211712},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.050000000000000003,1.05],"tickmode":"array","ticktext":["0%","25%","50%","75%","100%"],"tickvals":[0,0.25,0.5,0.75,1],"categoryorder":"array","categoryarray":["0%","25%","50%","75%","100%"],"nticks":null,"ticks":"outside","tickcolor":"rgba(179,179,179,1)","ticklen":3.6529680365296811,"tickwidth":0.33208800332088001,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.283520132835198},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(222,222,222,1)","gridwidth":0.33208800332088001,"zeroline":false,"anchor":"y","title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,9.5999999999999996],"tickmode":"array","ticktext":["Compliance/ Regulatory Risk","Environmental/Natural Hazards","Facilities","Financial Risk","Information/Cybersecurity Risk","Manpower or Personnel","Process and Procedure","Security and Safety Risks","Strategic Risk"],"tickvals":[1,2,3,4,5,6,6.9999999999999991,8,9],"categoryorder":"array","categoryarray":["Compliance/ Regulatory Risk","Environmental/Natural Hazards","Facilities","Financial Risk","Information/Cybersecurity Risk","Manpower or Personnel","Process and Procedure","Security and Safety Risks","Strategic Risk"],"nticks":null,"ticks":"outside","tickcolor":"rgba(179,179,179,1)","ticklen":3.6529680365296811,"tickwidth":0.33208800332088001,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.283520132835205},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(222,222,222,1)","gridwidth":0.33208800332088001,"zeroline":false,"anchor":"x","title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":"rgba(255,255,255,1)","line":{"color":"rgba(179,179,179,1)","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","layer":"below","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":13.283520132835198},"orientation":"h","x":0.5,"y":-0.14999999999999999,"xanchor":"center","yanchor":"top","title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":13.283520132835198}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"3cb440d71f16":{"x":{},"y":{},"fill":{},"text":{},"type":"bar"}},"cur_data":"3cb440d71f16","visdat":{"3cb440d71f16":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-showcase html-fill-item html-fill-container">
+
+<i class="bi bi-building-fill-exclamation"></i></div>
+<div class="value-box-area">
+<p class="value-box-title">
+<strong>High risks department</strong>
+</p>
+<p class="value-box-value">
+15
+</p>
 </div>
 </div>
-<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
-    <template>Expand</template>
-    <span class="bslib-full-screen-enter badge rounded-pill">
-        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
-    </span>
-</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
 </div>
-</div><div class="bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 70fr); grid-auto-columns: minmax(0, 1fr);">
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox bslib-card html-fill-container bslib-value-box bg-info showcase-left-center" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-showcase html-fill-item html-fill-container">
+
+<i class="bi bi-pc-display-horizontal"></i></div>
+<div class="value-box-area">
+<p class="value-box-title">
+<strong>Top risk</strong>
+</p>
+<p class="value-box-value">
+<p>Information/ Cybersecurity</p>
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
 <div class="bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
 grid-auto-rows: minmax(0, 1fr);">
-<div class="card cell bslib-card html-fill-container" data-title="Risk identifed across department" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card cell bslib-card html-fill-container" data-title="Departmental Risk Distribution" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
 <div class="card-header"><div class="card-title"><span style="display: inline">
-Risk identifed across department
+Departmental Risk Distribution
 </span></div></div>
 <div class="card-body html-fill-item html-fill-container">
 <div class="cell-output-display html-fill-item html-fill-container">
 <img src="index_files/figure-html/risk%20identified-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div><div class="bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 40fr) minmax(3em, 60fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card cell bslib-card html-fill-container" data-title="Overall Risk Level Profile" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title"><span style="display: inline">
+Overall Risk Level Profile
+</span></div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<div class="plotly html-widget html-fill-item html-fill-container" id="htmlwidget-997188f4a45509968fce" style="width:100%;height:406px;"></div>
+<script type="application/json" data-for="htmlwidget-997188f4a45509968fce">{"x":{"visdat":{"264076a72ad5":["function () ","plotlyVisDat"]},"cur_data":"264076a72ad5","attrs":{"264076a72ad5":{"labels":{},"values":{},"textinfo":"label+percent","textposition":"outside","hoverinfo":"text","hovertext":{},"marker":{"colors":["#06d6a0","#f7f96bee","#fa9324","#d62828"]},"hole":0.5,"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"pie"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"showlegend":false,"hovermode":"closest"},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"labels":["High","Low","Tolerable","Very High"],"values":[0.29203539823008851,0.23893805309734514,0.44247787610619471,0.026548672566371681],"textinfo":"label+percent","textposition":["outside","outside","outside","outside"],"hoverinfo":["text","text","text","text"],"hovertext":["Category: High<br>Count: 33<br>Share: 29.2%","Category: Low<br>Count: 27<br>Share: 23.89%","Category: Tolerable<br>Count: 50<br>Share: 44.25%","Category: Very High<br>Count: 3<br>Share: 2.65%"],"marker":{"color":"rgba(31,119,180,1)","colors":["#06d6a0","#f7f96bee","#fa9324","#d62828"],"line":{"color":"rgba(255,255,255,1)"}},"hole":0.5,"type":"pie","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card cell bslib-card html-fill-container" data-title="Risk Categories by Severity" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title"><span style="display: inline">
+Risk Categories by Severity
+</span></div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<div class="plotly html-widget html-fill-item html-fill-container" id="htmlwidget-6bbdca17444434552d17" style="width:100%;height:406px;"></div>
+<script type="application/json" data-for="htmlwidget-6bbdca17444434552d17">{"x":{"data":[{"orientation":"v","width":[0.05555555555555558,0.125,0.021739130434782594],"base":[0.65000000000000002,4.6500000000000004,6.6500000000000004],"x":[0.97222222222222221,0.9375,0.98913043478260865],"y":[0.70000000000000007,0.69999999999999929,0.69999999999999929],"text":["Category: Compliance/ Regulatory Risk<br />Rating: Very High<br />Count: 1<br />Share: 5.56%","Category: Information/Cybersecurity Risk<br />Rating: Very High<br />Count: 1<br />Share: 12.5%","Category: Process and Procedure<br />Rating: Very High<br />Count: 1<br />Share: 2.17%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(214,40,40,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Very High","legendgroup":"Very High","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.5,0.44444444444444442,1,0.33333333333333337,0.375,0.08333333333333337,0.15217391304347827,0.5,0.44444444444444442],"base":[0.65000000000000002,1.6499999999999999,2.6499999999999999,3.6499999999999999,4.6500000000000004,5.6500000000000004,6.6500000000000004,7.6500000000000004,8.6500000000000004],"x":[0.69444444444444442,0.77777777777777779,0.5,0.83333333333333326,0.6875,0.95833333333333326,0.90217391304347827,0.75,0.77777777777777779],"y":[0.70000000000000007,0.70000000000000018,0.70000000000000018,0.69999999999999973,0.69999999999999929,0.69999999999999929,0.69999999999999929,0.69999999999999929,0.69999999999999929],"text":["Category: Compliance/ Regulatory Risk<br />Rating: High<br />Count: 9<br />Share: 50%","Category: Environmental/Natural Hazards<br />Rating: High<br />Count: 4<br />Share: 44.44%","Category: Facilities<br />Rating: High<br />Count: 1<br />Share: 100%","Category: Financial Risk<br />Rating: High<br />Count: 2<br />Share: 33.33%","Category: Information/Cybersecurity Risk<br />Rating: High<br />Count: 3<br />Share: 37.5%","Category: Manpower or Personnel<br />Rating: High<br />Count: 1<br />Share: 8.33%","Category: Process and Procedure<br />Rating: High<br />Count: 7<br />Share: 15.22%","Category: Security and Safety Risks<br />Rating: High<br />Count: 2<br />Share: 50%","Category: Strategic Risk<br />Rating: High<br />Count: 4<br />Share: 44.44%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(250,147,36,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"High","legendgroup":"High","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.38888888888888884,0.55555555555555558,0.66666666666666663,0.25,0.66666666666666663,0.39130434782608697,0.25,0.55555555555555558],"base":[0.65000000000000002,1.6499999999999999,3.6499999999999999,4.6500000000000004,5.6500000000000004,6.6500000000000004,7.6500000000000004,8.6500000000000004],"x":[0.25,0.27777777777777779,0.33333333333333331,0.375,0.58333333333333326,0.63043478260869568,0.375,0.27777777777777779],"y":[0.70000000000000007,0.70000000000000018,0.69999999999999973,0.69999999999999929,0.69999999999999929,0.69999999999999929,0.69999999999999929,0.69999999999999929],"text":["Category: Compliance/ Regulatory Risk<br />Rating: Tolerable<br />Count: 7<br />Share: 38.89%","Category: Environmental/Natural Hazards<br />Rating: Tolerable<br />Count: 5<br />Share: 55.56%","Category: Financial Risk<br />Rating: Tolerable<br />Count: 4<br />Share: 66.67%","Category: Information/Cybersecurity Risk<br />Rating: Tolerable<br />Count: 2<br />Share: 25%","Category: Manpower or Personnel<br />Rating: Tolerable<br />Count: 8<br />Share: 66.67%","Category: Process and Procedure<br />Rating: Tolerable<br />Count: 18<br />Share: 39.13%","Category: Security and Safety Risks<br />Rating: Tolerable<br />Count: 1<br />Share: 25%","Category: Strategic Risk<br />Rating: Tolerable<br />Count: 5<br />Share: 55.56%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(247,249,107,0.9294)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Tolerable","legendgroup":"Tolerable","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.055555555555555552,0.25,0.25,0.43478260869565216,0.25],"base":[0.65000000000000002,4.6500000000000004,5.6500000000000004,6.6500000000000004,7.6500000000000004],"x":[0.027777777777777776,0.125,0.125,0.21739130434782608,0.125],"y":[0.70000000000000007,0.69999999999999929,0.69999999999999929,0.69999999999999929,0.69999999999999929],"text":["Category: Compliance/ Regulatory Risk<br />Rating: Low<br />Count: 1<br />Share: 5.56%","Category: Information/Cybersecurity Risk<br />Rating: Low<br />Count: 2<br />Share: 25%","Category: Manpower or Personnel<br />Rating: Low<br />Count: 3<br />Share: 25%","Category: Process and Procedure<br />Rating: Low<br />Count: 20<br />Share: 43.48%","Category: Security and Safety Risks<br />Rating: Low<br />Count: 1<br />Share: 25%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(6,214,160,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Low","legendgroup":"Low","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":23.305936073059364,"r":7.3059360730593621,"b":24.242424242424242,"l":210.21170610211712},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.050000000000000003,1.05],"tickmode":"array","ticktext":["0%","25%","50%","75%","100%"],"tickvals":[0,0.25,0.5,0.75,1],"categoryorder":"array","categoryarray":["0%","25%","50%","75%","100%"],"nticks":null,"ticks":"outside","tickcolor":"rgba(179,179,179,1)","ticklen":3.6529680365296811,"tickwidth":0.33208800332088001,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.283520132835198},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(222,222,222,1)","gridwidth":0.33208800332088001,"zeroline":false,"anchor":"y","title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,9.5999999999999996],"tickmode":"array","ticktext":["Compliance/ Regulatory Risk","Environmental/Natural Hazards","Facilities","Financial Risk","Information/Cybersecurity Risk","Manpower or Personnel","Process and Procedure","Security and Safety Risks","Strategic Risk"],"tickvals":[1,2,3,4,5,6,6.9999999999999991,8,9],"categoryorder":"array","categoryarray":["Compliance/ Regulatory Risk","Environmental/Natural Hazards","Facilities","Financial Risk","Information/Cybersecurity Risk","Manpower or Personnel","Process and Procedure","Security and Safety Risks","Strategic Risk"],"nticks":null,"ticks":"outside","tickcolor":"rgba(179,179,179,1)","ticklen":3.6529680365296811,"tickwidth":0.33208800332088001,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.283520132835205},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(222,222,222,1)","gridwidth":0.33208800332088001,"zeroline":false,"anchor":"x","title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":"rgba(255,255,255,1)","line":{"color":"rgba(179,179,179,1)","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","layer":"below","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.955168119551683},"orientation":"h","x":0.5,"y":-0.14999999999999999,"xanchor":"center","yanchor":"top","title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":13.283520132835198}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"26401ebe1a6d":{"x":{},"y":{},"fill":{},"text":{},"type":"bar"}},"cur_data":"26401ebe1a6d","visdat":{"26401ebe1a6d":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
@@ -163,6 +378,19 @@ Risk identifed across department
 
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
     const icon = "";
     const anchorJS = new window.AnchorJS();
     anchorJS.options = {

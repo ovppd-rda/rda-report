@@ -3,6 +3,9 @@ title: "VSU Risk Assessment 2026"
 format: 
   dashboard:
     orientation: columns
+    theme: 
+        light: flatly
+        dark: darkly
 ---
 
 ```{r}
@@ -29,13 +32,107 @@ risk_dta <- read_excel("data/risk-assessment.xlsx") |>
 ```
 
 
-## Column - Risk category and rating
+## Column - Risk identified across department {width="55%"}
+
+### Value boxed {height="25%"}
+
+```{r}
+## very high risk department
+dept_risk_dta <- 
+    risk_dta |> 
+    count(department, risk_rating) |> 
+    filter(risk_rating %in% c("Very High", "High")) |> 
+    na.omit()
+
+dept_name_risk_dta <- 
+    risk_dta |> 
+    count(department, risk_rating) |> 
+    filter(risk_rating %in% c("Very High")) |> 
+    pull(department)
+
+category_most_risk_dta <- 
+    risk_dta |> 
+    count(risk_category, risk_rating) |> 
+    group_by(risk_category) |> 
+    mutate(pct = n / sum(n)) |> 
+    ungroup() |> 
+    filter(risk_rating == "Very High") |> 
+    mutate(risk_category = if_else(str_detect(risk_category, "Information"), "Information/ Cybersecurity", risk_category)) |> 
+    slice_max(order_by = pct, n = 1) |> 
+    pull(risk_category) 
+
+```
+
+::: {.valuebox icon="search" color="danger"}
+**Total risk identified**
+
+`{r} nrow(risk_dta)`
+
+:::
+
+::: {.valuebox icon="building-fill-exclamation" color="warning"}
+**High risks department**
+
+`{r} nrow(dept_risk_dta)`
+
+:::
+
+::: {.valuebox icon="pc-display-horizontal" color="info"}
+**Top risk**
+
+`{r} paste(category_most_risk_dta, "\n \n")`
+
+
+:::
+
+
+
+
+### Row - Risk identified {height="75%"}
+
+```{r}
+#| label: risk identified
+#| title: Departmental Risk Distribution 
+#| fig-height: 10
+
+risk_dta |> 
+    count(department, risk_rating) |> 
+    mutate(risk_rating = factor(risk_rating, levels = c("Low", "Tolerable", "High", "Very High"))) |>
+    group_by(department) |> 
+    mutate(pct = n / sum(n)) |> 
+    ungroup() |> 
+    mutate(risk_rating = fct_rev(risk_rating)) |> 
+    ggplot(aes(pct, department, fill = risk_rating)) +
+    geom_col(width = 0.7) +
+    scale_x_continuous(labels = percent_format()) +
+    scale_fill_manual(values = c("#d62828", "#fa9324", "#f7f96bee", "#06d6a0")) +
+    guides(fill = guide_legend(reverse = TRUE)) +
+    labs(
+        y = NULL,
+        x = "Percentage proportion",
+        fill = "Rating"
+    ) +
+    theme_light() +
+    theme(
+        axis.text = element_text(size = 14),
+        legend.position = "bottom",
+        legend.text = element_text(size = 14),
+        legend.title = element_text(size = 14)
+    )
+```
+
+
+
+
+
+
+## Columns - Risk category and rating {width="45%"}
 
 ### Row - Risk breakdown {height="40%"}
 
 ```{r}
 #| label: risk rating all
-#| title: Risk rating breakdown
+#| title: Overall Risk Level Profile
 #| warning: false
 #| message: false
 
@@ -63,7 +160,7 @@ risk_dta |>
 
 ```{r}
 #| label: risk category
-#| title: Risk category by risk rating
+#| title: Risk Categories by Severity 
 
 P_risk_category <- 
     risk_dta |> 
@@ -91,45 +188,9 @@ P_risk_category <-
     theme(
         axis.text = element_text(size = 10),
         legend.position = "bottom",
-        legend.text = element_text(size = 10),
+        legend.text = element_text(size = 9),
         legend.title = element_text(size = 10)
     )
 
 ggplotly(P_risk_category, tooltip = "text")
-```
-
-
-## Column - Risk identified across department
-
-### Row - Risk identified {height="70%"}
-
-```{r}
-#| label: risk identified
-#| title: Risk identifed across department
-#| fig-height: 10
-
-risk_dta |> 
-    count(department, risk_rating) |> 
-    mutate(risk_rating = factor(risk_rating, levels = c("Low", "Tolerable", "High", "Very High"))) |>
-    group_by(department) |> 
-    mutate(pct = n / sum(n)) |> 
-    ungroup() |> 
-    mutate(risk_rating = fct_rev(risk_rating)) |> 
-    ggplot(aes(pct, department, fill = risk_rating)) +
-    geom_col(width = 0.7) +
-    scale_x_continuous(labels = percent_format()) +
-    scale_fill_manual(values = c("#d62828", "#fa9324", "#f7f96bee", "#06d6a0")) +
-    guides(fill = guide_legend(reverse = TRUE)) +
-    labs(
-        y = NULL,
-        x = "Percentage proportion",
-        fill = "Rating"
-    ) +
-    theme_light() +
-    theme(
-        axis.text = element_text(size = 14),
-        legend.position = "bottom",
-        legend.text = element_text(size = 14),
-        legend.title = element_text(size = 14)
-    )
 ```

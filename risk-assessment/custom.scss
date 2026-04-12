@@ -1,0 +1,57 @@
+
+/*Scrollable code output*/
+.pre {
+  width: 600px;
+  overflow-x: auto;
+}
+
+.scrolling {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.vscroll {
+  overflow-y: auto;
+  white-space: nowrap;
+}
+
+
+/*Body and Headdings*/
+
+body {
+  font-size: 16px;
+  font-family: Arial;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: bold;
+  color: white;
+}
+
+h2 {
+  font-size: 28px;
+}
+
+h3 {
+  font-size: 26px;
+}
+
+/*Tables*/
+
+table, th, td {
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  vertical-align: middle;
+}
+
+table, ol, ul {
+    margin-top: 0;
+    margin-bottom: 0px;
+}
+
+
+.my-valuebox {
+  color: #ffffff;
+}
+
