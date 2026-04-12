@@ -7,7 +7,7 @@ This repository hosts institutional reports prepared under the Office of the Vic
 | Report Name            | Version | Link                                                                 |
 |------------------------|---------|----------------------------------------------------------------------|
 | Risk Assessment        | 2026    | [View Report](https://ovppd-rda.github.io/rda-report/risk-assessment) |
-| VSU Housing Survey     | 2026    | [View Report](https://ovppd-rda.github.io/rda-report/housing-survey)  |
+| VSU Housing Survey     | 2026    | [View Report]([https://ovppd-rda.github.io/rda-report/housing-survey](https://ovppd-rda.github.io/rda-report/vsu-housing-inventory))  |
 
 ## 🌐 Website
 
