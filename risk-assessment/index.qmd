@@ -4,8 +4,9 @@ format:
   dashboard:
     orientation: columns
     theme: 
-        light: flatly
+        light: simplex
         dark: darkly
+logo: img/vsu-logo.svg
 ---
 
 ```{r}
@@ -16,6 +17,8 @@ library(janitor)
 library(scales)
 library(lessR)
 library(plotly)
+library(tidytext)
+library(ggwordcloud)
 
 options(plotly_suggest = FALSE)
 
@@ -95,6 +98,7 @@ category_most_risk_dta <-
 
 p <- risk_dta |> 
   count(department, risk_rating) |> 
+  na.omit() |> 
   mutate(risk_rating = factor(risk_rating, 
                               levels = c("Low", "Tolerable", "High", "Very High"))) |>
   group_by(department) |> 
@@ -137,6 +141,29 @@ ggplotly(p, tooltip = "text")
 ### Row - Risk breakdown {height="50%"}
 
 ```{r}
+#| label: risk description
+#| title: Risk descriptions
+#| warning: false
+#| message: false
+
+
+p_risk_dec <- risk_dec_dta <- 
+    risk_dta |> 
+    select(risk_description) |> 
+    unnest_tokens(word, risk_description) |> 
+    anti_join(stop_words) |> 
+    count(word, sort = TRUE) |> 
+    filter(n > 1)
+
+set.seed(20260413)
+ggwordcloud(risk_dec_dta$word, risk_dec_dta$n,  min.freq = 2, scale = c(6, 0.6))
+# ggsave(plot = p_risk_dec, filename = "img/risk_dec.jpeg", width = 10, height = 8, dpi = 300)
+```
+
+
+### Row - Risk category {.tabset height="50%"}
+
+```{r}
 #| label: risk rating all
 #| title: Overall Risk Level Profile
 #| warning: false
@@ -154,15 +181,12 @@ risk_dta |>
           textposition = "outside",
           hoverinfo = "text",              
           hovertext = ~hover_lab,          
-          marker = list(colors = c("#06d6a0", "#f7f96bee", "#fa9324", "#d62828")),
+          marker = list(colors = c("#fa9324", "#06d6a0", "#f7f96bee", "#d62828")),
           hole = 0.5) |>
   layout(title = NULL,
          showlegend = FALSE)
 
 ```
-
-
-### Row - Risk category {height="50%"}
 
 ```{r}
 #| label: risk category
@@ -200,3 +224,6 @@ P_risk_category <-
 
 ggplotly(P_risk_category, tooltip = "text")
 ```
+
+
+
