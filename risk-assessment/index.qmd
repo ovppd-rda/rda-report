@@ -4,8 +4,8 @@ format:
   dashboard:
     orientation: columns
     theme: 
-        light: simplex
-        dark: darkly
+        light: litera
+        dark: spacelab
 logo: img/vsu-logo.svg
 ---
 
@@ -93,7 +93,7 @@ category_most_risk_dta <-
 
 ```{r}
 #| label: risk identified
-#| title: Departmental Risk Distribution 
+#| title: Departmental risk distribution 
 #| fig-width: 5
 
 p <- risk_dta |> 
@@ -165,7 +165,7 @@ ggwordcloud(risk_dec_dta$word, risk_dec_dta$n,  min.freq = 2, scale = c(6, 0.6))
 
 ```{r}
 #| label: risk rating all
-#| title: Overall Risk Level Profile
+#| title: Overall risk level
 #| warning: false
 #| message: false
 
@@ -190,7 +190,7 @@ risk_dta |>
 
 ```{r}
 #| label: risk category
-#| title: Risk Categories by Severity 
+#| title: Risk categories  
 
 P_risk_category <- 
     risk_dta |> 
